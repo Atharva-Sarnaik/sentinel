@@ -1,0 +1,17 @@
+subsystem: thermal
+channels:
+  - T_PANEL_A
+  - T_PANEL_B
+  - T_CPU
+  - T_BATTERY
+  - T_ANTENNA
+
+model:
+  lstm_hidden_size: 64
+  lstm_num_layers: 2
+  latent_dim: 32
+  epochs: 50
+  batch_size: 64
+  learning_rate: 0.001
+  threshold_percentile: 95.0
+

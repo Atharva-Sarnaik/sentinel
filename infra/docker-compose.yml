@@ -1,0 +1,37 @@
+version: "3.9"
+
+# Docker Compose for the Sentinel stack (Tier 6, task T6.4)
+# Status: scaffold placeholder — not yet implemented.
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///audit.db
+    volumes:
+      - ./data:/app/data
+    # TODO (T6.4): implement full service definition
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.dashboard
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    # TODO (T6.4): implement dashboard service
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/mlflow/mlruns
+    command: mlflow server --host 0.0.0.0 --port 5000
+    # TODO (T6.4): configure backend store and artifact root
+

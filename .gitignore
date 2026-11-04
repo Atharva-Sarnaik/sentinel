@@ -1,0 +1,90 @@
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+wheels/
+
+# ── Virtual environments ──────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# ── Environment variables ─────────────────────────────────────
+.env.local
+.env.*.local
+secrets.yaml
+secrets.yml
+
+# ── Data (DVC-tracked; never commit raw data) ─────────────────
+data/raw/
+data/processed/
+data/interim/
+data/external/
+!data/README.md
+*.parquet
+*.h5
+*.hdf5
+*.csv
+
+# ── MLflow & DVC ─────────────────────────────────────────────
+mlruns/
+mlartifacts/
+.dvc/cache/
+.dvc/tmp/
+*.dvc           # keep .dvc files for config, exclude large caches
+
+# ── Models ───────────────────────────────────────────────────
+models/
+*.pt
+*.pth
+*.onnx
+*.pkl
+*.joblib
+
+# ── IDE / OS ─────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Testing / Coverage ───────────────────────────────────────
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+
+# ── Mypy ─────────────────────────────────────────────────────
+.mypy_cache/
+
+# ── Ruff ─────────────────────────────────────────────────────
+.ruff_cache/
+
+# ── Jupyter ──────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+logs/
+audit.db
+
+# ── Docker ───────────────────────────────────────────────────
+*.dockerignore
+
+# ── Node (Streamlit assets, if any) ──────────────────────────
+node_modules/
+

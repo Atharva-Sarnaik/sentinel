@@ -1,0 +1,21 @@
+# Specialist configs for per-subsystem LSTM-AE training (task T1.3).
+# Each file parameterises the shared LSTMAETemplate for one subsystem.
+# Channels listed here must match channel_map.yaml after T0.5 verification.
+
+subsystem: power
+channels:
+  - P_BUS_VOLTAGE
+  - P_BUS_CURRENT
+  - P_SOLAR_ARRAY_VOLTAGE
+  - P_BATTERY_SOC
+  - P_BATTERY_TEMP
+
+model:
+  lstm_hidden_size: 64
+  lstm_num_layers: 2
+  latent_dim: 32
+  epochs: 50
+  batch_size: 64
+  learning_rate: 0.001
+  threshold_percentile: 95.0
+

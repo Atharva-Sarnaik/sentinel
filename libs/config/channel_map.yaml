@@ -1,0 +1,73 @@
+# channel_map.yaml
+# =================
+# Maps telemetry channel names to the four specialist subsystems.
+#
+# Risk R1 (ADR-0001): This grouping is UNVERIFIED.
+#   Task T0.5 is a feasibility spike to confirm that a defensible
+#   4-subsystem grouping exists for the SMAP/MSL datasets.
+#   If the spike fails, the fallback datasets (ESA-ADB / OPS-SAT)
+#   will be used and this map updated via ADR-0001.
+#
+# Channel names below are illustrative placeholders only.
+# Update after completing T0.5.
+
+project_name: "Sentinel"
+
+channel_map:
+  power:
+        # SMAP/MSL power telemetry channels — PLACEHOLDER, verify in T0.5
+        - "P_BUS_VOLTAGE"
+        - "P_BUS_CURRENT"
+        - "P_SOLAR_ARRAY_VOLTAGE"
+        - "P_BATTERY_SOC"
+        - "P_BATTERY_TEMP"
+
+  thermal:
+        # SMAP/MSL thermal telemetry channels — PLACEHOLDER, verify in T0.5
+        - "T_PANEL_A"
+        - "T_PANEL_B"
+        - "T_CPU"
+        - "T_BATTERY"
+        - "T_ANTENNA"
+
+  attitude:
+        # SMAP/MSL attitude telemetry channels — PLACEHOLDER, verify in T0.5
+        - "A_QUATERNION_W"
+        - "A_QUATERNION_X"
+        - "A_QUATERNION_Y"
+        - "A_QUATERNION_Z"
+        - "A_GYRO_X"
+        - "A_GYRO_Y"
+        - "A_GYRO_Z"
+
+  communications:
+        # SMAP/MSL comms telemetry channels — PLACEHOLDER, verify in T0.5
+        - "C_DOWNLINK_RATE"
+        - "C_UPLINK_RATE"
+        - "C_BER"
+        - "C_RSSI"
+        - "C_TX_POWER"
+
+data:
+  dataset: "SMAP"       # or MSL | ESA-ADB | OPS-SAT  (finalised in ADR-0001)
+  replay_path: "data/raw"
+  window_size: 100
+  stride: 10
+  test_fraction: 0.2    # chronological split — no random shuffling (ADR-0002)
+
+model:
+  lstm_hidden_size: 64
+  lstm_num_layers: 2
+  latent_dim: 32
+  epochs: 50
+  batch_size: 64
+  learning_rate: 0.001
+  threshold_percentile: 95.0
+
+llm:
+  provider: "openai"
+  model_name: "gpt-4o-mini"
+  max_retries: 2        # verifier retry budget (ADR-0002)
+  temperature: 0.0
+  max_tokens: 512
+

@@ -1,0 +1,68 @@
+# CODEOWNERS
+# ==========
+# Owners are assigned by the task directory in docs/TASKS.md.
+# Every PR must be reviewed by the non-owning teammate (cross-review policy).
+# Both members must be able to explain every component in the viva (T7.4).
+
+# Global fallback — both teammates review everything
+*                                   @Atharva-Sarnaik @Sujalhede
+
+# libs/ — both own shared contracts and config
+/libs/                              @Atharva-Sarnaik @Sujalhede
+/libs/contracts/                    @Atharva-Sarnaik
+/libs/config/                       @Sujalhede
+
+# services/ — per-task ownership (see docs/TASKS.md)
+/services/data_plane/adapter.py     @Sujalhede
+/services/data_plane/integrity_gate.py  @Atharva-Sarnaik
+/services/data_plane/               @Sujalhede
+
+/services/feature_plane/            @Sujalhede
+
+/services/specialists/lstm_ae_template.py  @Sujalhede
+/services/specialists/thresholding.py      @Atharva-Sarnaik
+/services/specialists/              @Sujalhede
+
+/services/baselines/static_threshold.py    @Sujalhede
+/services/baselines/isolation_forest.py    @Sujalhede
+/services/baselines/combined_lstm_ae.py    @Atharva-Sarnaik
+/services/baselines/                       @Sujalhede
+
+/services/fusion/                   @Atharva-Sarnaik
+
+/services/reasoner/                 @Atharva-Sarnaik
+
+/services/verifier/grounding.py     @Sujalhede
+/services/verifier/retry.py         @Atharva-Sarnaik
+/services/verifier/                 @Sujalhede
+
+/services/orchestrator/             @Atharva-Sarnaik
+
+/services/evaluation/               @Atharva-Sarnaik
+
+/services/audit/                    @Sujalhede
+
+/services/api/                      @Sujalhede
+
+/services/observability/            @Atharva-Sarnaik
+
+# apps/
+/apps/cli/                          @Atharva-Sarnaik
+/apps/dashboard/                    @Sujalhede
+
+# tests/
+/tests/leakage/                     @Atharva-Sarnaik
+/tests/unit/                        @Atharva-Sarnaik @Sujalhede
+
+# docs/
+/docs/adr/                          @Atharva-Sarnaik @Sujalhede
+/docs/HYPOTHESES.md                 @Atharva-Sarnaik
+/docs/TASKS.md                      @Atharva-Sarnaik @Sujalhede
+/docs/TIERS.md                      @Atharva-Sarnaik @Sujalhede
+
+# CI / tooling
+/.github/                           @Atharva-Sarnaik
+/Makefile                           @Sujalhede
+/check.ps1                          @Sujalhede
+/pyproject.toml                     @Atharva-Sarnaik @Sujalhede
+

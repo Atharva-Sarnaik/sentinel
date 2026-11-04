@@ -1,0 +1,19 @@
+subsystem: attitude
+channels:
+  - A_QUATERNION_W
+  - A_QUATERNION_X
+  - A_QUATERNION_Y
+  - A_QUATERNION_Z
+  - A_GYRO_X
+  - A_GYRO_Y
+  - A_GYRO_Z
+
+model:
+  lstm_hidden_size: 64
+  lstm_num_layers: 2
+  latent_dim: 32
+  epochs: 50
+  batch_size: 64
+  learning_rate: 0.001
+  threshold_percentile: 95.0
+
