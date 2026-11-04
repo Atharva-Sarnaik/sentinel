@@ -5,7 +5,7 @@
 > Decision-support research prototype, not flight software.
 
 **Status: scaffolding, implementation not started.**
-![CI](https://github.com/Atharva-Sarnaik/satellite-telemetry-agents/actions/workflows/ci.yml/badge.svg?branch=develop)
+![CI](https://github.com/Atharva-Sarnaik/sentinel/actions/workflows/ci.yml/badge.svg?branch=develop)
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -52,8 +52,8 @@ Telemetry source (SMAP / MSL replay; ESA-ADB / OPS-SAT as fallback)
 ### Linux / macOS
 
 ```bash
-git clone https://github.com/Atharva-Sarnaik/satellite-telemetry-agents
-cd satellite-telemetry-agents
+git clone https://github.com/Atharva-Sarnaik/sentinel
+cd sentinel
 python3.11 -m venv .venv && source .venv/bin/activate
 make setup    # installs dev dependencies + pre-commit hooks
 make check    # ruff · mypy · import-linter · pytest
@@ -62,8 +62,8 @@ make check    # ruff · mypy · import-linter · pytest
 ### Windows (PowerShell)
 
 ```powershell
-git clone https://github.com/Atharva-Sarnaik/satellite-telemetry-agents
-cd satellite-telemetry-agents
+git clone https://github.com/Atharva-Sarnaik/sentinel
+cd sentinel
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
@@ -78,7 +78,7 @@ pre-commit install
 ## Repository Structure
 
 ```
-satellite-telemetry-agents/
+sentinel/
 ├── apps/
 │   ├── cli/                    # Typer + Rich entry point (sentinel CLI)
 │   └── dashboard/              # Streamlit replay viewer (Tier 6)

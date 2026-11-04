@@ -62,8 +62,8 @@ dev = [
 sentinel = "apps.cli.main:app"
 
 [project.urls]
-Repository = "https://github.com/Atharva-Sarnaik/satellite-telemetry-agents"
-"Issue Tracker" = "https://github.com/Atharva-Sarnaik/satellite-telemetry-agents/issues"
+Repository = "https://github.com/Atharva-Sarnaik/sentinel"
+"Issue Tracker" = "https://github.com/Atharva-Sarnaik/sentinel/issues"
 
 # ── Hatch ────────────────────────────────────────────────────
 [tool.hatch.build.targets.wheel]

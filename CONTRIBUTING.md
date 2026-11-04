@@ -45,8 +45,8 @@ Guide: **Dr. M. S. Arade**, Dept. of AI & Data Science, GCE Kolhapur.
 ### Linux / macOS
 
 ```bash
-git clone https://github.com/Atharva-Sarnaik/satellite-telemetry-agents
-cd satellite-telemetry-agents
+git clone https://github.com/Atharva-Sarnaik/sentinel
+cd sentinel
 python3.11 -m venv .venv
 source .venv/bin/activate
 make setup        # pip install -e ".[dev]" + pre-commit install
@@ -56,8 +56,8 @@ make check        # verify everything passes
 ### Windows (PowerShell)
 
 ```powershell
-git clone https://github.com/Atharva-Sarnaik/satellite-telemetry-agents
-cd satellite-telemetry-agents
+git clone https://github.com/Atharva-Sarnaik/sentinel
+cd sentinel
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
