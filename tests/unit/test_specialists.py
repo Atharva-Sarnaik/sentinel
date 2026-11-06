@@ -18,7 +18,9 @@ import pytest
 
 from libs.contracts import Severity, Subsystem, TelemetryWindow
 from services.specialists.lstm_ae_template import LSTMAETemplate
+from services.specialists.specialist import SpecialistDetector
 from services.specialists.thresholding import DynamicThresholder
+from services.specialists.train import train_all_from_configs, train_specialist
 
 
 @pytest.fixture
@@ -134,3 +136,66 @@ def test_lstm_ae_save_and_load(
         assert isinstance(err, float)
     finally:
         model_path.unlink(missing_ok=True)
+
+
+# ---------------------------------------------------------------------------
+# SpecialistDetector and Training Tests (T1.5)
+# ---------------------------------------------------------------------------
+
+
+def test_specialist_detector_inference_and_persistence(
+    specialist_config: dict,
+    training_windows: list[TelemetryWindow],
+) -> None:
+    detector, metrics = train_specialist(
+        config=specialist_config,
+        train_windows=training_windows,
+        val_windows=training_windows[:3],
+        epochs=2,
+    )
+    assert detector.subsystem == Subsystem.POWER
+    assert "threshold" in metrics
+    assert metrics["n_train"] == len(training_windows)
+    assert metrics["n_eval"] == 3
+
+    # Test analyze
+    opinion = detector.analyze(training_windows[0])
+    assert opinion.subsystem == Subsystem.POWER
+    assert 0.0 <= opinion.anomaly_score <= 1.0
+    assert opinion.threshold_used == metrics["threshold"]
+
+    # Test save and load
+    with tempfile.NamedTemporaryFile("wb", suffix=".pt", delete=False) as tf:
+        model_path = Path(tf.name)
+
+    try:
+        detector.save(model_path)
+        loaded = SpecialistDetector.load(model_path)
+        assert loaded.subsystem == Subsystem.POWER
+        loaded_op = loaded.analyze(training_windows[0])
+        assert loaded_op.anomaly_score == opinion.anomaly_score
+    finally:
+        model_path.unlink(missing_ok=True)
+
+
+def test_train_all_from_configs(
+    training_windows: list[TelemetryWindow],
+    tmp_path: Path,
+) -> None:
+    # Point to the actual specialist configs
+    config_dir = Path("services/specialists/configs")
+    output_dir = tmp_path / "models"
+
+    results = train_all_from_configs(
+        config_dir=config_dir,
+        train_windows=training_windows,
+        val_windows=training_windows[:2],
+        output_dir=output_dir,
+        epochs=1,
+    )
+
+    assert len(results) == 4
+    for sub in ["power", "thermal", "attitude", "communications"]:
+        assert sub in results
+        assert results[sub]["n_train"] == len(training_windows)
+        assert Path(results[sub]["saved_path"]).is_file()

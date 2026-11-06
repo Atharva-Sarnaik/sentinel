@@ -132,3 +132,30 @@ def run_static_threshold(
         threshold_used=0.5,
         model_run_id=model_run_id,
     )
+
+
+class StaticThresholdBaseline:
+    """
+    Object-oriented wrapper for Arm A static thresholding baseline.
+    """
+
+    def __init__(
+        self,
+        thresholds: dict[str, float] | None = None,
+        model_run_id: str = "baseline-arm-a-static",
+    ) -> None:
+        self.thresholds: dict[str, float] = thresholds or {}
+        self.model_run_id = model_run_id
+
+    def fit(
+        self,
+        windows: Sequence[TelemetryWindow],
+        percentile: float = 99.0,
+    ) -> StaticThresholdBaseline:
+        """Calibrate channel thresholds from normal training telemetry windows."""
+        self.thresholds = calibrate_static_thresholds(windows, percentile=percentile)
+        return self
+
+    def predict(self, window: TelemetryWindow) -> SpecialistOpinion:
+        """Evaluate a TelemetryWindow and produce a SpecialistOpinion."""
+        return run_static_threshold(window, self.thresholds, model_run_id=self.model_run_id)

@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from libs.contracts import Severity, Subsystem, TelemetryWindow
+from services.baselines.combined_lstm_ae import CombinedLSTMAEDetector, run_combined_lstm_ae
 from services.baselines.isolation_forest import IsolationForestBaseline, run_isolation_forest
 from services.baselines.static_threshold import calibrate_static_thresholds, run_static_threshold
 
@@ -130,5 +131,61 @@ def test_isolation_forest_save_and_load(
 
         op = run_isolation_forest(anomalous_window, loaded)
         assert 0.0 <= op.anomaly_score <= 1.0
+    finally:
+        model_path.unlink(missing_ok=True)
+
+
+# ---------------------------------------------------------------------------
+# Arm C: Combined LSTM-AE Tests
+# ---------------------------------------------------------------------------
+
+
+def test_combined_lstm_ae_train_and_predict(
+    normal_training_windows: list[TelemetryWindow],
+    anomalous_window: TelemetryWindow,
+) -> None:
+    channels = ["P-1", "P-2"]
+    detector = CombinedLSTMAEDetector(
+        channels=channels,
+        hidden_dim=16,
+        num_layers=1,
+        latent_dim=8,
+    )
+    metrics = detector.train(normal_training_windows, epochs=2, batch_size=8)
+    assert detector.is_trained is True
+    assert "loss_history" in metrics
+    assert detector.threshold > 0.0
+
+    # Predict normal
+    norm_op = detector.predict(normal_training_windows[0])
+    assert 0.0 <= norm_op.anomaly_score <= 1.0
+
+    # Predict anomalous
+    anom_op = detector.predict(anomalous_window)
+    assert anom_op.anomaly_score > norm_op.anomaly_score
+    assert len(anom_op.responsible_channels) >= 1
+
+
+def test_combined_lstm_ae_save_and_load(
+    normal_training_windows: list[TelemetryWindow],
+    anomalous_window: TelemetryWindow,
+) -> None:
+    channels = ["P-1", "P-2"]
+    detector = CombinedLSTMAEDetector(
+        channels=channels,
+        hidden_dim=16,
+        num_layers=1,
+        latent_dim=8,
+    )
+    detector.train(normal_training_windows, epochs=2, batch_size=8)
+
+    with tempfile.NamedTemporaryFile("wb", suffix=".pt", delete=False) as tf:
+        model_path = Path(tf.name)
+
+    try:
+        detector.save(model_path)
+        opinion = run_combined_lstm_ae(anomalous_window, str(model_path))
+        assert 0.0 <= opinion.anomaly_score <= 1.0
+        assert opinion.threshold_used == detector.threshold
     finally:
         model_path.unlink(missing_ok=True)
