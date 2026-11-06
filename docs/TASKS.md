@@ -23,18 +23,18 @@ Full task list with IDs, owners, branch names, and done-when criteria.
 
 ---
 
-## Tier 1: Specialists and Baselines (weeks 7–11)
+## Tier 1: Specialists and Baselines (weeks 7–11) — COMPLETED ✅
 
-| ID | Task | Owner | Branch | Done when |
+| ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| T1.1 | Static-threshold baseline (arm A) | S | `feat/T1.1-static-threshold` | Runs in harness |
-| T1.2 | Isolation Forest baseline (arm B) | S | `feat/T1.2-isolation-forest` | Runs in harness |
-| T1.3 | Shared LSTM-AE template and training script | S | `feat/T1.3-lstm-ae-template` | One script trains any subsystem from config |
-| T1.4 | Nonparametric dynamic thresholding | A | `feat/T1.4-dynamic-threshold` | Thresholds produced per channel group |
-| T1.5 | Train four specialists, per-subsystem eval | S | `feat/T1.5-train-specialists` | Metrics table per subsystem with run IDs |
-| T1.6 | Single combined LSTM-AE (arm C) | A | `feat/T1.6-combined-lstm-ae` | Runs in harness |
-| T1.7 | Model registry and experiment tracking (MLflow) | A | `feat/T1.7-mlflow-registry` | Artifacts versioned; runs reference hashes |
-| T1.8 | `specialists report` CLI command | S | `feat/T1.8-specialists-cli` | Prints per-subsystem metrics |
+| T1.1 | Static-threshold baseline (arm A) | S | Done | Runs in harness |
+| T1.2 | Isolation Forest baseline (arm B) | S | Done | Runs in harness |
+| T1.3 | Shared LSTM-AE template and training script | S | Done | One script trains any subsystem from config |
+| T1.4 | Nonparametric dynamic thresholding | A | Done | Thresholds produced per channel group |
+| T1.5 | Train four specialists, per-subsystem eval | S | Done | Metrics table per subsystem with run IDs |
+| T1.6 | Single combined LSTM-AE (arm C) | A | Done | Runs in harness |
+| T1.7 | Model registry and experiment tracking (MLflow) | A | Done | Artifacts versioned; runs reference hashes |
+| T1.8 | `specialists report` CLI command | S | Done | Prints per-subsystem metrics |
 
 ---
 

@@ -193,18 +193,18 @@ make check        # or .\check.ps1
 | T0.9 | Windowing and chronological split | S | Done | Split reproducible; boundary test passes |
 | T0.10 | Permanent leakage-regression suite | A | Done | Planted look-ahead bug caught by CI |
 
-### Tier 1: Specialists and Baselines (weeks 7–11, `tier-1-done`)
+### Tier 1: Specialists and Baselines (weeks 7–11, `tier-1-done`) — COMPLETED ✅
 
-| ID | Task | Owner | Done when |
-|---|---|---|---|
-| T1.1 | Static-threshold baseline (arm A) | S | Runs in harness |
-| T1.2 | Isolation Forest baseline (arm B) | S | Runs in harness |
-| T1.3 | Shared LSTM-AE template and training script | S | One script trains any subsystem from config |
-| T1.4 | Nonparametric dynamic thresholding | A | Thresholds produced per channel group |
-| T1.5 | Train four specialists, per-subsystem eval | S | Metrics table per subsystem with run IDs |
-| T1.6 | Single combined LSTM-AE (arm C) | A | Runs in harness |
-| T1.7 | Model registry and experiment tracking (MLflow) | A | Artifacts versioned; runs reference hashes |
-| T1.8 | `specialists report` CLI command | S | Prints per-subsystem metrics |
+| ID | Task | Owner | Status | Done when |
+|---|---|---|---|---|
+| T1.1 | Static-threshold baseline (arm A) | S | Done | Runs in harness |
+| T1.2 | Isolation Forest baseline (arm B) | S | Done | Runs in harness |
+| T1.3 | Shared LSTM-AE template and training script | S | Done | One script trains any subsystem from config |
+| T1.4 | Nonparametric dynamic thresholding | A | Done | Thresholds produced per channel group |
+| T1.5 | Train four specialists, per-subsystem eval | S | Done | Metrics table per subsystem with run IDs |
+| T1.6 | Single combined LSTM-AE (arm C) | A | Done | Runs in harness |
+| T1.7 | Model registry and experiment tracking (MLflow) | A | Done | Artifacts versioned; runs reference hashes |
+| T1.8 | `specialists report` CLI command | S | Done | Prints per-subsystem metrics |
 
 ### Tier 2: Fusion Engine (weeks 12–14, `tier-2-done`)
 

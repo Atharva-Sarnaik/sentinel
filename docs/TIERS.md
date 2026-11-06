@@ -11,9 +11,10 @@
 
 ---
 
-## Tier 1: Specialists and Baselines — weeks 7–11 — `tier-1-done`
+## Tier 1: Specialists and Baselines — weeks 7–11 — `tier-1-done` ✅
 
-**Exit criteria:** All three baselines run in harness; four specialists trained; per-subsystem metrics table with MLflow run IDs exists; `sentinel specialists-report` command works.
+**Status:** Completed
+**Exit criteria:** All three baselines run in harness (Arm A static threshold, Arm B Isolation Forest, Arm C combined LSTM-AE); four specialists trained from YAML configs; per-subsystem metrics table with MLflow/manifest run IDs exists; `sentinel specialists-report` command works. All 54 unit and leakage tests pass.
 
 ---
 
