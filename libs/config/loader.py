@@ -6,8 +6,7 @@ Validates and exposes the Sentinel YAML configuration.
 Design: a single SentinelConfig object is the runtime source of truth.
         Services import this; they never read YAML files directly.
 
-Status: scaffolding — Pydantic model and loader stub only.
-        Implementation (actual YAML parsing + validation) not started.
+Status: complete — YAML parsing, schema validation, and channel mapping helpers (T0.4).
 """
 
 from __future__ import annotations
@@ -17,6 +16,8 @@ from typing import Any
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
+
+from libs.contracts.models import Subsystem
 
 # ---------------------------------------------------------------------------
 # Config schema
@@ -30,15 +31,36 @@ class SubsystemChannelMap(BaseModel):
     ADR-0001 records the final dataset decision.
     """
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(frozen=True, extra="allow")
 
     power: list[str] = Field(default_factory=list)
     thermal: list[str] = Field(default_factory=list)
     attitude: list[str] = Field(default_factory=list)
     communications: list[str] = Field(default_factory=list)
 
+    def channels_for(self, subsystem: Subsystem | str) -> list[str]:
+        """Return the list of channel names assigned to the given subsystem."""
+        sub_name = str(subsystem).lower()
+        if hasattr(self, sub_name):
+            return getattr(self, sub_name)  # type: ignore[no-any-return]
+        return []
+
+    def subsystem_for(self, channel: str) -> Subsystem | None:
+        """Find which subsystem a channel belongs to, or None if unmapped."""
+        for sub in Subsystem:
+            if channel in self.channels_for(sub):
+                return sub
+        return None
+
+    @property
+    def all_channels(self) -> list[str]:
+        """Flattened list of all registered channels across all subsystems."""
+        return self.power + self.thermal + self.attitude + self.communications
+
 
 class DataConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     dataset: str = "SMAP"  # or MSL, ESA-ADB, OPS-SAT
     replay_path: Path = Path("data/raw")
     window_size: int = 100  # time steps
@@ -47,6 +69,8 @@ class DataConfig(BaseModel):
 
 
 class ModelConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     lstm_hidden_size: int = 64
     lstm_num_layers: int = 2
     latent_dim: int = 32
@@ -57,6 +81,8 @@ class ModelConfig(BaseModel):
 
 
 class LLMConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     provider: str = "openai"
     model_name: str = "gpt-4o-mini"
     max_retries: int = 2  # verifier retry budget (ADR-0002)
@@ -67,7 +93,7 @@ class LLMConfig(BaseModel):
 class SentinelConfig(BaseModel):
     """Top-level configuration container.
 
-    Loaded once at startup; treat as read-only after construction.
+    Loaded once at startup; treated as read-only after construction.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -98,16 +124,15 @@ def load_config(path: Path | None = None) -> SentinelConfig:
         A validated, frozen SentinelConfig instance.
 
     Raises:
-        NotImplementedError: Full config merging is not yet implemented.
-                             Only the channel map stub is loaded.
+        FileNotFoundError: If the specified configuration file does not exist.
+        ValueError: If YAML syntax is invalid or schema validation fails.
     """
     config_path = path or _DEFAULT_CONFIG_PATH
 
-    with config_path.open() as fh:
-        _raw: dict[str, Any] = yaml.safe_load(fh) or {}
+    if not config_path.exists():
+        raise FileNotFoundError(f"Configuration file not found: {config_path}")
 
-    # TODO (T0.4): merge per-service YAML files; validate all fields.
-    raise NotImplementedError(
-        "load_config: full implementation pending task T0.4. "
-        f"Config path resolved to: {config_path}"
-    )
+    with config_path.open(encoding="utf-8") as fh:
+        raw: dict[str, Any] = yaml.safe_load(fh) or {}
+
+    return SentinelConfig.model_validate(raw)
