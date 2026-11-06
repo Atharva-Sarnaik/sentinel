@@ -10,11 +10,14 @@ Design rule (ADR-0002):
 
 Owner:   Sujal Hede (@Sujalhede)
 Tier:    0 (task T0.9)
-Status:  not started
+Status:  complete — strictly chronological window split.
 """
 
 from __future__ import annotations
 
+import math
+
+from libs.common.helpers import assert_no_future_leakage
 from libs.contracts import TelemetryWindow
 
 
@@ -33,7 +36,27 @@ def chronological_split(
         (train_windows, test_windows)
 
     Raises:
-        NotImplementedError: Implementation pending task T0.9.
+        ValueError: If test_fraction not in (0, 1).
     """
-    # TODO (T0.9): implement chronological split.
-    raise NotImplementedError("chronological_split: implementation pending task T0.9.")
+    if not (0.0 < test_fraction < 1.0):
+        raise ValueError(f"test_fraction must be in (0, 1), got {test_fraction}")
+
+    n = len(windows)
+    if n == 0:
+        return [], []
+
+    # Sort windows by start_time to guarantee ordering
+    sorted_windows = sorted(windows, key=lambda w: w.start_time)
+    split_idx = math.floor((1.0 - test_fraction) * n)
+
+    train_windows = sorted_windows[:split_idx]
+    test_windows = sorted_windows[split_idx:]
+
+    # Assert no future leakage across boundary
+    if train_windows and test_windows:
+        assert_no_future_leakage(
+            [w.end_time for w in train_windows],
+            [w.start_time for w in test_windows],
+        )
+
+    return train_windows, test_windows
