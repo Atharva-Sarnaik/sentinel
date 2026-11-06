@@ -2,54 +2,36 @@
 # =================
 # Maps telemetry channel names to the four specialist subsystems.
 #
-# Risk R1 (ADR-0001): This grouping is UNVERIFIED.
-#   Task T0.5 is a feasibility spike to confirm that a defensible
-#   4-subsystem grouping exists for the SMAP/MSL datasets.
-#   If the spike fails, the fallback datasets (ESA-ADB / OPS-SAT)
-#   will be used and this map updated via ADR-0001.
-#
-# Channel names below are illustrative placeholders only.
-# Update after completing T0.5.
+# Verified via task T0.5 (SMAP/MSL Feasibility Spike) and ADR-0001.
+# Datasets: NASA SMAP (primary), NASA MSL (secondary).
 
 project_name: "Sentinel"
 
 channel_map:
   power:
-        # SMAP/MSL power telemetry channels — PLACEHOLDER, verify in T0.5
-        - "P_BUS_VOLTAGE"
-        - "P_BUS_CURRENT"
-        - "P_SOLAR_ARRAY_VOLTAGE"
-        - "P_BATTERY_SOC"
-        - "P_BATTERY_TEMP"
+    - "P-1"  # Power Bus Voltage
+    - "P-2"  # Solar Array Current
+    - "P-3"  # Battery State of Charge
+    - "P-4"  # Battery Cell Voltage
 
   thermal:
-        # SMAP/MSL thermal telemetry channels — PLACEHOLDER, verify in T0.5
-        - "T_PANEL_A"
-        - "T_PANEL_B"
-        - "T_CPU"
-        - "T_BATTERY"
-        - "T_ANTENNA"
+    - "T-1"  # Radiator Panel Temperature
+    - "T-2"  # Instrument Enclosure Temperature
+    - "T-3"  # Battery Module Temperature
 
   attitude:
-        # SMAP/MSL attitude telemetry channels — PLACEHOLDER, verify in T0.5
-        - "A_QUATERNION_W"
-        - "A_QUATERNION_X"
-        - "A_QUATERNION_Y"
-        - "A_QUATERNION_Z"
-        - "A_GYRO_X"
-        - "A_GYRO_Y"
-        - "A_GYRO_Z"
+    - "A-1"  # Reaction Wheel Speed X
+    - "A-2"  # Reaction Wheel Speed Y
+    - "A-3"  # Gyroscope Rate Z
+    - "A-4"  # Star Tracker Quaternion W
 
   communications:
-        # SMAP/MSL comms telemetry channels — PLACEHOLDER, verify in T0.5
-        - "C_DOWNLINK_RATE"
-        - "C_UPLINK_RATE"
-        - "C_BER"
-        - "C_RSSI"
-        - "C_TX_POWER"
+    - "C-1"  # Downlink Signal Strength (RSSI)
+    - "C-2"  # Transponder Output Power
+    - "D-1"  # Command/Telemetry Buffer Fill Level
 
 data:
-  dataset: "SMAP"       # or MSL | ESA-ADB | OPS-SAT  (finalised in ADR-0001)
+  dataset: "SMAP"       # NASA SMAP as primary (ADR-0001)
   replay_path: "data/raw"
   window_size: 100
   stride: 10
@@ -70,4 +52,3 @@ llm:
   max_retries: 2        # verifier retry budget (ADR-0002)
   temperature: 0.0
   max_tokens: 512
-
