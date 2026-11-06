@@ -131,3 +131,4 @@ Build the data ingestion and time-series extraction pipeline, train the 4 specia
 * **Atharva defends:** Multi-agent design decisions, why deterministic fusion governs alert severity rather than generative LLMs, how the grounding verifier mathematically prevents hallucinations, and the event-wise F1-score gains across the 5 ablation arms.
 * **Sujal defends:** Time-series feature engineering, prevention of chronological look-ahead leakage, LSTM-Autoencoder reconstruction mechanics, threshold calibration per subsystem, and real-time dashboard latency.
 * **Cross-defense (T7.4):** In the final two weeks, both teammates rehearse explaining each other’s code so there are no single points of failure in the viva.
+

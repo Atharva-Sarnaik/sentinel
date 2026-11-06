@@ -91,11 +91,7 @@ def validate_window(
     if max_staleness_seconds is not None:
         now = reference_time or datetime.now(UTC)
         # Ensure window.end_time has timezone info for comparison
-        end_t = (
-            window.end_time
-            if window.end_time.tzinfo
-            else window.end_time.replace(tzinfo=UTC)
-        )
+        end_t = window.end_time if window.end_time.tzinfo else window.end_time.replace(tzinfo=UTC)
         age_seconds = (now - end_t).total_seconds()
         if age_seconds > max_staleness_seconds:
             raise DataIntegrityError(
