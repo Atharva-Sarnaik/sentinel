@@ -62,10 +62,7 @@ SMAP_SUBSYSTEM_GROUPINGS = {
 
 def verify_grouping_defense() -> bool:
     """Verify that all 4 subsystems have at least 3 distinct channels assigned."""
-    for sub, channels in SMAP_SUBSYSTEM_GROUPINGS.items():
-        if len(channels) < 3:
-            return False
-    return True
+    return all(len(channels) >= 3 for channels in SMAP_SUBSYSTEM_GROUPINGS.values())
 
 
 if __name__ == "__main__":
