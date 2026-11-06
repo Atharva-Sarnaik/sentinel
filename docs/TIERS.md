@@ -18,9 +18,10 @@
 
 ---
 
-## Tier 2: Fusion Engine — weeks 12–14 — `tier-2-done`
+## Tier 2: Fusion Engine — weeks 12–14 — `tier-2-done` ✅
 
-**Exit criteria:** Fusion engine is deterministic, unit-tested; corroboration rules pass golden cases; attribution output matches contract.
+**Status:** Completed
+**Exit criteria:** Fusion engine is deterministic, unit-tested; corroboration rules pass golden cases (isolated anomalies, power+thermal coupling, attitude+comms coupling, cascading system failures); root-cause attribution matches contract and obeys physical bias; same input always yields bit-for-bit identical decision (property tested). All 64 unit and leakage tests pass.
 
 ---
 

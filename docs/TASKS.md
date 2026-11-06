@@ -38,14 +38,14 @@ Full task list with IDs, owners, branch names, and done-when criteria.
 
 ---
 
-## Tier 2: Fusion Engine (weeks 12–14)
+## Tier 2: Fusion Engine (weeks 12–14) — COMPLETED ✅
 
-| ID | Task | Owner | Branch | Done when |
+| ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| T2.1 | Severity weighting | A | `feat/T2.1-severity-weighting` | Deterministic, documented, unit-tested |
-| T2.2 | Cross-subsystem corroboration rules | A | `feat/T2.2-corroboration-rules` | Rules in config, golden-case tests |
-| T2.3 | Subsystem attribution logic | S | `feat/T2.3-attribution` | Attribution output matches contract |
-| T2.4 | Fusion golden cases and property tests | S | `feat/T2.4-fusion-tests` | Same input always gives same decision |
+| T2.1 | Severity weighting | A | Done | Deterministic, documented, unit-tested |
+| T2.2 | Cross-subsystem corroboration rules | A | Done | Rules in config, golden-case tests |
+| T2.3 | Subsystem attribution logic | S | Done | Attribution output matches contract |
+| T2.4 | Fusion golden cases and property tests | S | Done | Same input always gives same decision |
 
 ---
 

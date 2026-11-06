@@ -206,14 +206,14 @@ make check        # or .\check.ps1
 | T1.7 | Model registry and experiment tracking (MLflow) | A | Done | Artifacts versioned; runs reference hashes |
 | T1.8 | `specialists report` CLI command | S | Done | Prints per-subsystem metrics |
 
-### Tier 2: Fusion Engine (weeks 12–14, `tier-2-done`)
+### Tier 2: Fusion Engine (weeks 12–14, `tier-2-done`) — COMPLETED ✅
 
-| ID | Task | Owner | Done when |
-|---|---|---|---|
-| T2.1 | Severity weighting | A | Deterministic, documented, unit-tested |
-| T2.2 | Cross-subsystem corroboration rules | A | Rules in config, golden-case tests |
-| T2.3 | Subsystem attribution logic | S | Attribution output matches contract |
-| T2.4 | Fusion golden cases and property tests | S | Same input always gives same decision |
+| ID | Task | Owner | Status | Done when |
+|---|---|---|---|---|
+| T2.1 | Severity weighting | A | Done | Deterministic, documented, unit-tested |
+| T2.2 | Cross-subsystem corroboration rules | A | Done | Rules in config, golden-case tests |
+| T2.3 | Subsystem attribution logic | S | Done | Attribution output matches contract |
+| T2.4 | Fusion golden cases and property tests | S | Done | Same input always gives same decision |
 
 ### Tier 3: Orchestration, Reasoner, Verifier, Audit (weeks 15–17, `tier-3-done`)
 
