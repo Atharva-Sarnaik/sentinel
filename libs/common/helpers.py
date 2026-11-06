@@ -6,14 +6,14 @@ Shared utility functions used across services.
 Design rule (ADR-0002): chronological_split_indices must never shuffle.
 All time-series splits must be strictly ordered by timestamp.
 
-Status: complete — chronological split indices, leakage assertions, and time helpers (T0.9 / T0.10).
+Status: complete — chronological split indices, leakage assertions, and feature extraction helpers.
 """
 
 from __future__ import annotations
 
 import math
 import uuid
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime
 
 
@@ -83,3 +83,40 @@ def assert_no_future_leakage(
             f"DATA LEAKAGE DETECTED: min test timestamp ({min_test}) "
             f"precedes max train timestamp ({max_train})."
         )
+
+
+def extract_window_features(channels: Mapping[str, Sequence[float]]) -> dict[str, float]:
+    """
+    Extract statistical and temporal features from telemetry channel series.
+
+    Features computed per channel:
+      - mean
+      - std
+      - min
+      - max
+      - delta (last - first)
+
+    Args:
+        channels: Mapping from channel name to sequence of float values.
+
+    Returns:
+        dict mapping feature name to scalar float value.
+    """
+    features: dict[str, float] = {}
+
+    for ch, series in channels.items():
+        if not series:
+            continue
+
+        n = len(series)
+        mean_val = sum(series) / n
+        var_val = sum((x - mean_val) ** 2 for x in series) / max(1, n - 1)
+        std_val = math.sqrt(var_val)
+
+        features[f"{ch}__mean"] = mean_val
+        features[f"{ch}__std"] = std_val
+        features[f"{ch}__min"] = min(series)
+        features[f"{ch}__max"] = max(series)
+        features[f"{ch}__delta"] = float(series[-1] - series[0])
+
+    return features
