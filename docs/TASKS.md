@@ -6,20 +6,20 @@ Full task list with IDs, owners, branch names, and done-when criteria.
 
 ---
 
-## Tier 0: Foundations (weeks 1–6)
+## Tier 0: Foundations (weeks 1–6) — Status: COMPLETED ✅
 
-| ID | Task | Owner | Branch | Done when |
-|---|---|---|---|---|
-| T0.1 | Dev environment, Makefile/PowerShell, README | S | `chore/T0.1-dev-env` | Fresh clone → green checks on both machines |
-| T0.2 | Branch protection, CODEOWNERS, CI green | A | `chore/T0.2-branch-protection` | Rules active; CI green on empty repo |
-| T0.3 | Contracts library: typed models and tests | A | `feat/T0.3-contracts` | Contracts frozen and unit-tested |
-| T0.4 | Config schema incl. channel→subsystem map | S | `feat/T0.4-config-schema` | YAML + validating loader |
-| T0.5 | SMAP/MSL feasibility spike (risk R1) | S | `exp/T0.5-smap-feasibility` | Notebook documents whether a defensible 4-subsystem grouping exists |
-| T0.6 | ADR-0001 dataset decision | A | `docs/T0.6-adr-dataset` | ADR merged after review |
-| T0.7 | Telemetry adapter and replay source | S | `feat/T0.7-telemetry-adapter` | Windows streamed in time order, no future data |
-| T0.8 | Data-integrity gate | A | `feat/T0.8-integrity-gate` | Stale or corrupt input rejected with reasons |
-| T0.9 | Windowing and chronological split | S | `feat/T0.9-windowing-split` | Split reproducible; boundary test passes |
-| T0.10 | Permanent leakage-regression suite | A | `chore/T0.10-leakage-suite` | Planted look-ahead bug caught by CI |
+| ID | Task | Owner | Branch | Status | Done when |
+|---|---|---|---|---|---|
+| T0.1 | Dev environment, Makefile/PowerShell, README | S | `chore/T0.1-dev-env` | Done | Fresh clone → green checks on both machines |
+| T0.2 | Branch protection, CODEOWNERS, CI green | A | `chore/T0.2-branch-protection` | Done | Rules active; CI green on empty repo |
+| T0.3 | Contracts library: typed models and tests | A | `feat/T0.3-contracts` | Done | Contracts frozen and unit-tested |
+| T0.4 | Config schema incl. channel→subsystem map | S | `feat/T0.4-config-schema` | Done | YAML + validating loader |
+| T0.5 | SMAP/MSL feasibility spike (risk R1) | S | `exp/T0.5-smap-feasibility` | Done | Notebook documents whether a defensible 4-subsystem grouping exists |
+| T0.6 | ADR-0001 dataset decision | A | `docs/T0.6-adr-dataset` | Done | ADR merged after review |
+| T0.7 | Telemetry adapter and replay source | S | `feat/T0.7-telemetry-adapter` | Done | Windows streamed in time order, no future data |
+| T0.8 | Data-integrity gate | A | `feat/T0.8-integrity-gate` | Done | Stale or corrupt input rejected with reasons |
+| T0.9 | Windowing and chronological split | S | `feat/T0.9-windowing-split` | Done | Split reproducible; boundary test passes |
+| T0.10 | Permanent leakage-regression suite | A | `chore/T0.10-leakage-suite` | Done | Planted look-ahead bug caught by CI |
 
 ---
 

@@ -4,9 +4,10 @@
 
 ---
 
-## Tier 0: Foundations — weeks 1–6 — `tier-0-done`
+## Tier 0: Foundations — weeks 1–6 — `tier-0-done` ✅
 
-**Exit criteria:** Fresh clone → green checks on both machines; SMAP/MSL feasibility verdict recorded; adapter streams windows in time order; leakage suite catches planted bug.
+**Status:** Completed
+**Exit criteria:** Fresh clone → green checks on both machines; SMAP/MSL feasibility verdict recorded (ADR-0001 accepted); adapter streams windows in time order; leakage suite catches planted bug and production split passes with zero leakage. All 40 unit and leakage tests pass.
 
 ---
 

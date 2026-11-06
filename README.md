@@ -178,20 +178,20 @@ make check        # or .\check.ps1
 
 **Owner key: A** = Atharva Sarnaik · **S** = Sujal Hede
 
-### Tier 0: Foundations (weeks 1–6, `tier-0-done`)
+### Tier 0: Foundations (weeks 1–6, `tier-0-done`) — COMPLETED ✅
 
-| ID | Task | Owner | Done when |
-|---|---|---|---|
-| T0.1 | Dev environment, Makefile/PowerShell, README | S | Fresh clone → green checks on both machines |
-| T0.2 | Branch protection, CODEOWNERS, CI green | A | Rules active; CI green on empty repo |
-| T0.3 | Contracts library: typed models and tests | A | Contracts frozen and unit-tested |
-| T0.4 | Config schema incl. channel→subsystem map | S | YAML + validating loader |
-| T0.5 | SMAP/MSL feasibility spike (risk R1) | S | Notebook documents whether a defensible 4-subsystem grouping exists |
-| T0.6 | ADR-0001 dataset decision | A | ADR merged after review |
-| T0.7 | Telemetry adapter and replay source | S | Windows streamed in time order, no future data |
-| T0.8 | Data-integrity gate | A | Stale or corrupt input rejected with reasons |
-| T0.9 | Windowing and chronological split | S | Split reproducible; boundary test passes |
-| T0.10 | Permanent leakage-regression suite | A | Planted look-ahead bug caught by CI |
+| ID | Task | Owner | Status | Done when |
+|---|---|---|---|---|
+| T0.1 | Dev environment, Makefile/PowerShell, README | S | Done | Fresh clone → green checks on both machines |
+| T0.2 | Branch protection, CODEOWNERS, CI green | A | Done | Rules active; CI green on empty repo |
+| T0.3 | Contracts library: typed models and tests | A | Done | Contracts frozen and unit-tested |
+| T0.4 | Config schema incl. channel→subsystem map | S | Done | YAML + validating loader |
+| T0.5 | SMAP/MSL feasibility spike (risk R1) | S | Done | Notebook documents whether a defensible 4-subsystem grouping exists |
+| T0.6 | ADR-0001 dataset decision | A | Done | ADR merged after review |
+| T0.7 | Telemetry adapter and replay source | S | Done | Windows streamed in time order, no future data |
+| T0.8 | Data-integrity gate | A | Done | Stale or corrupt input rejected with reasons |
+| T0.9 | Windowing and chronological split | S | Done | Split reproducible; boundary test passes |
+| T0.10 | Permanent leakage-regression suite | A | Done | Planted look-ahead bug caught by CI |
 
 ### Tier 1: Specialists and Baselines (weeks 7–11, `tier-1-done`)
 
