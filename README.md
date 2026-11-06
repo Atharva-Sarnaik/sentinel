@@ -18,6 +18,8 @@
 | Atharva Sarnaik | [@Atharva-Sarnaik](https://github.com/Atharva-Sarnaik) | Fusion engine, Orchestration, Evaluation, CI |
 | Sujal Hede | [@Sujalhede](https://github.com/Sujalhede) | Data plane, Feature plane, Specialists, API |
 
+> For a detailed tier-by-tier breakdown of each member's responsibilities, deliverables, and viva questions, see [`docs/roles_distribution.md`](docs/roles_distribution.md).
+
 **Guide:** Dr. M. S. Arade, Dept. of AI & Data Science, GCE Kolhapur (BE 2026–2027)
 
 ---
@@ -329,6 +331,7 @@ Full tracking in [`docs/HYPOTHESES.md`](docs/HYPOTHESES.md). Negative results wi
 ## Read Next
 
 - [CONTRIBUTING.md](CONTRIBUTING.md) — environment setup, daily workflow, code standards
+- [docs/roles_distribution.md](docs/roles_distribution.md) — complete tier-by-tier role breakdown and viva defense guide
 - [docs/TIERS.md](docs/TIERS.md) — tier exit criteria
 - [docs/TASKS.md](docs/TASKS.md) — full task table with branch names
 - [docs/HYPOTHESES.md](docs/HYPOTHESES.md) — H1–H5 tracking

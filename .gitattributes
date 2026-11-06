@@ -11,3 +11,4 @@
 *.txt text eol=lf
 *.ps1 text eol=crlf
 Makefile text eol=lf
+
