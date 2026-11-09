@@ -77,10 +77,13 @@ htmlcov/
 .ipynb_checkpoints/
 *.ipynb
 
-# ── Logs ─────────────────────────────────────────────────────
+# ── Logs & Artifacts ─────────────────────────────────────────
 *.log
 logs/
 audit.db
+artifacts/
+*.db
+
 
 # ── Docker ───────────────────────────────────────────────────
 *.dockerignore
