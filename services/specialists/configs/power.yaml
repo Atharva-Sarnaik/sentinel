@@ -1,14 +1,14 @@
 # Specialist configs for per-subsystem LSTM-AE training (task T1.3).
 # Each file parameterises the shared LSTMAETemplate for one subsystem.
-# Channels listed here must match channel_map.yaml after T0.5 verification.
+# Channels must match libs/config/channel_map.yaml (SMAP canonical IDs — ADR-0001).
+# Verified via task T0.5 (data/spikes/T0.5_smap_feasibility.py).
 
 subsystem: power
 channels:
-  - P_BUS_VOLTAGE
-  - P_BUS_CURRENT
-  - P_SOLAR_ARRAY_VOLTAGE
-  - P_BATTERY_SOC
-  - P_BATTERY_TEMP
+  - "P-1"  # Power Bus Voltage
+  - "P-2"  # Solar Array Current
+  - "P-3"  # Battery State of Charge
+  - "P-4"  # Battery Cell Voltage
 
 model:
   lstm_hidden_size: 64

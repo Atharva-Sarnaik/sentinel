@@ -1,12 +1,10 @@
+# Channels must match libs/config/channel_map.yaml (SMAP canonical IDs — ADR-0001).
 subsystem: attitude
 channels:
-  - A_QUATERNION_W
-  - A_QUATERNION_X
-  - A_QUATERNION_Y
-  - A_QUATERNION_Z
-  - A_GYRO_X
-  - A_GYRO_Y
-  - A_GYRO_Z
+  - "A-1"  # Reaction Wheel Speed X
+  - "A-2"  # Reaction Wheel Speed Y
+  - "A-3"  # Gyroscope Rate Z
+  - "A-4"  # Star Tracker Quaternion W
 
 model:
   lstm_hidden_size: 64

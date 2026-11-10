@@ -108,12 +108,38 @@ class LSTMAETemplate:
         self.is_trained: bool = False
 
     def _window_to_array(self, window: TelemetryWindow) -> np.ndarray:
-        """Convert window channels into (seq_len, input_dim) array in canonical channel order."""
+        """Convert window channels into (seq_len, input_dim) array in canonical channel order.
+
+        Raises:
+            KeyError: If a required channel is absent from the TelemetryWindow.
+                      Silent zero-fill is intentionally NOT supported — a missing
+                      channel indicates a channel_map.yaml / specialist config mismatch.
+            ValueError: If a channel's series length does not match the window length,
+                        or if any channel value is non-finite (NaN / Inf).
+        """
         seq_len = window.window_length
         matrix = np.zeros((seq_len, self.input_dim), dtype=np.float32)
         for col_idx, ch in enumerate(self.channels):
-            series = window.channels.get(ch, [0.0] * seq_len)
-            matrix[:, col_idx] = series
+            if ch not in window.channels:
+                raise KeyError(
+                    f"Channel '{ch}' required by specialist is absent from TelemetryWindow. "
+                    f"Window channels: {sorted(window.channels.keys())}. "
+                    f"Check that specialist config channels match "
+                    f"libs/config/channel_map.yaml."
+                )
+            series = window.channels[ch]
+            if len(series) != seq_len:
+                raise ValueError(
+                    f"Channel '{ch}' has {len(series)} values, expected {seq_len} "
+                    f"(window_length). All channels must have uniform length."
+                )
+            col = np.array(series, dtype=np.float32)
+            if not np.all(np.isfinite(col)):
+                raise ValueError(
+                    f"Channel '{ch}' contains non-finite values (NaN or Inf). "
+                    f"Data must pass integrity gate before specialist analysis."
+                )
+            matrix[:, col_idx] = col
         return matrix
 
     def train(
