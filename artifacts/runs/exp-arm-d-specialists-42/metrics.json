@@ -1,0 +1,93 @@
+{
+  "model_run_id": "exp-arm-d-specialists-42",
+  "arm": "D (Specialists alone)",
+  "execution_time_sec": 1.7202,
+  "subsystems": {
+    "attitude": {
+      "subsystem": "attitude",
+      "run_id": "specialist-attitude-001",
+      "channels": [
+        "A-1",
+        "A-2",
+        "A-3",
+        "A-4"
+      ],
+      "n_train": 50,
+      "n_eval": 30,
+      "final_loss": 1.2550897598266602,
+      "threshold": 1.5646511316299438,
+      "threshold_mean": 1.2162657713890075,
+      "threshold_std": 0.22440595903694824,
+      "anomaly_count": 0,
+      "anomaly_rate": 0.0,
+      "mean_anomaly_score": 0.3344,
+      "max_anomaly_score": 0.4344,
+      "mean_error": 1.067689,
+      "max_error": 1.38711
+    },
+    "communications": {
+      "subsystem": "communications",
+      "run_id": "specialist-communications-001",
+      "channels": [
+        "C-1",
+        "C-2",
+        "D-1"
+      ],
+      "n_train": 50,
+      "n_eval": 30,
+      "final_loss": 25.696130752563477,
+      "threshold": 27.055280685424805,
+      "threshold_mean": 25.498408546447752,
+      "threshold_std": 1.0316945778960331,
+      "anomaly_count": 0,
+      "anomaly_rate": 0.0,
+      "mean_anomaly_score": 0.4354,
+      "max_anomaly_score": 0.4354,
+      "mean_error": 24.038538,
+      "max_error": 24.038538
+    },
+    "power": {
+      "subsystem": "power",
+      "run_id": "specialist-power-001",
+      "channels": [
+        "P-1",
+        "P-2",
+        "P-3",
+        "P-4"
+      ],
+      "n_train": 50,
+      "n_eval": 30,
+      "final_loss": 791.2963256835938,
+      "threshold": 798.7938136408678,
+      "threshold_mean": 790.172919921875,
+      "threshold_std": 5.747262479328607,
+      "anomaly_count": 10,
+      "anomaly_rate": 0.3333,
+      "mean_anomaly_score": 0.5503,
+      "max_anomaly_score": 0.6916,
+      "mean_error": 916.294474,
+      "max_error": 1184.908691
+    },
+    "thermal": {
+      "subsystem": "thermal",
+      "run_id": "specialist-thermal-001",
+      "channels": [
+        "T-1",
+        "T-2",
+        "T-3"
+      ],
+      "n_train": 50,
+      "n_eval": 30,
+      "final_loss": 2035.419189453125,
+      "threshold": 2047.2401055101561,
+      "threshold_mean": 2033.4109326171874,
+      "threshold_std": 9.219448595312489,
+      "anomaly_count": 10,
+      "anomaly_rate": 0.3333,
+      "mean_anomaly_score": 0.5701,
+      "max_anomaly_score": 0.7432,
+      "mean_error": 2483.912923,
+      "max_error": 3411.192139
+    }
+  }
+}
