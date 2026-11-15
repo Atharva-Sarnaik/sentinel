@@ -1,10 +1,9 @@
+# Channels must match libs/config/channel_map.yaml (SMAP canonical IDs — ADR-0001).
 subsystem: thermal
 channels:
-  - T_PANEL_A
-  - T_PANEL_B
-  - T_CPU
-  - T_BATTERY
-  - T_ANTENNA
+  - "T-1"  # Radiator Panel Temperature
+  - "T-2"  # Instrument Enclosure Temperature
+  - "T-3"  # Battery Module Temperature
 
 model:
   lstm_hidden_size: 64

@@ -1,0 +1,15 @@
+{
+  "true_positives": 10,
+  "false_positives": 0,
+  "true_negatives": 20,
+  "false_negatives": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "f1_score": 1.0,
+  "false_positive_rate": 0.0,
+  "fpr": 0.0,
+  "execution_time_sec": 0.017,
+  "model_run_id": "exp-arm-a-static-42",
+  "arm": "A (Static Threshold)"
+}

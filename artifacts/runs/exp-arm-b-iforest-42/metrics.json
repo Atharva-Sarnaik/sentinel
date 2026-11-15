@@ -1,0 +1,13 @@
+{
+  "true_positives": 10,
+  "false_positives": 20,
+  "true_negatives": 0,
+  "false_negatives": 0,
+  "precision": 0.3333,
+  "recall": 1.0,
+  "f1": 0.5,
+  "false_positive_rate": 1.0,
+  "execution_time_sec": 0.4856,
+  "model_run_id": "exp-arm-b-iforest-42",
+  "arm": "B (Isolation Forest)"
+}
