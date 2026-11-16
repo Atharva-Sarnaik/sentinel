@@ -83,6 +83,8 @@ logs/
 audit.db
 artifacts/
 *.db
+docs/PROJECT_EXPLANATION_FOR_GUIDE.md
+
 
 
 # ── Docker ───────────────────────────────────────────────────
