@@ -179,17 +179,54 @@ def test_specialist_detector_inference_and_persistence(
 
 
 def test_train_all_from_configs(
-    training_windows: list[TelemetryWindow],
     tmp_path: Path,
 ) -> None:
+    # Build training windows with ALL 14 canonical channels so that each
+    # specialist (power=4ch, thermal=3ch, attitude=4ch, comms=3ch) can find
+    # its required channels after the YAML correction (ADR-0001 alignment).
+    ALL_CHANNELS = [
+        "A-1",
+        "A-2",
+        "A-3",
+        "A-4",
+        "C-1",
+        "C-2",
+        "D-1",
+        "P-1",
+        "P-2",
+        "P-3",
+        "P-4",
+        "T-1",
+        "T-2",
+        "T-3",
+    ]
+    t0 = datetime(2024, 1, 1, 0, 0, tzinfo=UTC)
+    full_windows: list[TelemetryWindow] = []
+    for i in range(12):
+        start = t0 + timedelta(minutes=i * 5)
+        end = start + timedelta(minutes=4)
+        channels = {
+            ch: [1.0 + 0.05 * (j % 5) + 0.01 * idx for j in range(30)]
+            for idx, ch in enumerate(ALL_CHANNELS)
+        }
+        full_windows.append(
+            TelemetryWindow(
+                subsystem=Subsystem.POWER,
+                start_time=start,
+                end_time=end,
+                channels=channels,
+                source_dataset="SMAP",
+            )
+        )
+
     # Point to the actual specialist configs
     config_dir = Path("services/specialists/configs")
     output_dir = tmp_path / "models"
 
     results = train_all_from_configs(
         config_dir=config_dir,
-        train_windows=training_windows,
-        val_windows=training_windows[:2],
+        train_windows=full_windows,
+        val_windows=full_windows[:2],
         output_dir=output_dir,
         epochs=1,
     )
@@ -197,5 +234,5 @@ def test_train_all_from_configs(
     assert len(results) == 4
     for sub in ["power", "thermal", "attitude", "communications"]:
         assert sub in results
-        assert results[sub]["n_train"] == len(training_windows)
+        assert results[sub]["n_train"] == len(full_windows)
         assert Path(results[sub]["saved_path"]).is_file()

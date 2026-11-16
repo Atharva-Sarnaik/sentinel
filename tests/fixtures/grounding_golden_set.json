@@ -1,0 +1,1162 @@
+[
+  {
+    "id": "GOLDEN-GROUNDING-001",
+    "category": "fully_grounded",
+    "ground_truth_label": "grounded",
+    "is_grounded": true,
+    "reason": "Accurately cites channel P-1, severity warning, and attributed power subsystem without invented claims.",
+    "evidence": {
+      "decision_id": "d350b9d9-7b1a-5e06-9027-a9676d158c5c",
+      "window_id": "479a763c-b1f9-5718-80e4-1ea47bebcbc0",
+      "opinions": [
+        {
+          "opinion_id": "b3771407-88a4-5dfd-af7a-677c224b16d7",
+          "window_id": "479a763c-b1f9-5718-80e4-1ea47bebcbc0",
+          "subsystem": "power",
+          "anomaly_score": 0.82,
+          "severity": "warning",
+          "responsible_channels": [
+            "P-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "8efbc347-9c2e-54e0-b7de-df04b76cfadf",
+          "window_id": "479a763c-b1f9-5718-80e4-1ea47bebcbc0",
+          "subsystem": "thermal",
+          "anomaly_score": 0.05,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "89892097-1cd0-50ec-9f07-e726b05e2649",
+          "window_id": "479a763c-b1f9-5718-80e4-1ea47bebcbc0",
+          "subsystem": "attitude",
+          "anomaly_score": 0.08,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "attitude-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "6875cef9-170b-5b74-9b04-9b60aa22fc35",
+          "window_id": "479a763c-b1f9-5718-80e4-1ea47bebcbc0",
+          "subsystem": "communications",
+          "anomaly_score": 0.03,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "communications-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "power"
+      ],
+      "attributed_subsystem": "power",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "9e57ee82-3f63-5a93-9179-c7c1baaf1535",
+      "decision_id": "d350b9d9-7b1a-5e06-9027-a9676d158c5c",
+      "text": "The power subsystem triggered a warning alert due to anomalous voltage fluctuations detected on channel P-1. Other subsystems remain nominal.",
+      "cited_channels": [
+        "P-1"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "8a50567f-e134-5ce7-9365-0dd77ac91a6b",
+      "explanation_id": "9e57ee82-3f63-5a93-9179-c7c1baaf1535",
+      "status": "grounded",
+      "ungrounded_claims": [],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-002",
+    "category": "fully_grounded",
+    "ground_truth_label": "grounded",
+    "is_grounded": true,
+    "reason": "All cited channels P-1, P-2, and T-1 are present in opinions; severity critical matches fused decision.",
+    "evidence": {
+      "decision_id": "8ebc1f37-12c2-5dc6-963e-79e4f11b360b",
+      "window_id": "6a6070b2-e496-505c-a215-955c8e99a308",
+      "opinions": [
+        {
+          "opinion_id": "e432ad0a-52aa-55de-8969-deb30fd6afc4",
+          "window_id": "6a6070b2-e496-505c-a215-955c8e99a308",
+          "subsystem": "power",
+          "anomaly_score": 0.95,
+          "severity": "critical",
+          "responsible_channels": [
+            "P-1",
+            "P-2"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "df23a6bb-d788-5240-bff5-486064b1de5a",
+          "window_id": "6a6070b2-e496-505c-a215-955c8e99a308",
+          "subsystem": "thermal",
+          "anomaly_score": 0.78,
+          "severity": "warning",
+          "responsible_channels": [
+            "T-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "c2516692-ceb9-5ffc-8991-1306780ecb3b",
+          "window_id": "6a6070b2-e496-505c-a215-955c8e99a308",
+          "subsystem": "attitude",
+          "anomaly_score": 0.05,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "attitude-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "517cdf0f-20ee-5d1e-9efb-2e81f07a2f6f",
+          "window_id": "6a6070b2-e496-505c-a215-955c8e99a308",
+          "subsystem": "communications",
+          "anomaly_score": 0.04,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "communications-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "critical",
+      "corroborating_subsystems": [
+        "power",
+        "thermal"
+      ],
+      "attributed_subsystem": "power",
+      "fusion_rule_applied": "corroborated-critical",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "ad779541-b822-50bd-86e0-0353ebbe67be",
+      "decision_id": "8ebc1f37-12c2-5dc6-963e-79e4f11b360b",
+      "text": "A critical anomaly is active in the power subsystem corroborated by thermal telemetry. Channels P-1, P-2, and T-1 exhibit severe threshold violations.",
+      "cited_channels": [
+        "P-1",
+        "P-2",
+        "T-1"
+      ],
+      "cited_severity": "critical",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "b6973bc2-b20f-52b2-b8ee-14ecd80e3b0b",
+      "explanation_id": "ad779541-b822-50bd-86e0-0353ebbe67be",
+      "status": "grounded",
+      "ungrounded_claims": [],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-003",
+    "category": "fully_grounded",
+    "ground_truth_label": "grounded",
+    "is_grounded": true,
+    "reason": "Accurately reports nominal health across all subsystems with no responsible channels cited.",
+    "evidence": {
+      "decision_id": "b1451c3b-1bae-502c-aeec-681eb7074778",
+      "window_id": "adfe1e18-1957-50ba-8a22-6c39adaaf3b4",
+      "opinions": [
+        {
+          "opinion_id": "7788a35e-b29c-5759-8988-a985c8d421fb",
+          "window_id": "adfe1e18-1957-50ba-8a22-6c39adaaf3b4",
+          "subsystem": "power",
+          "anomaly_score": 0.05,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "b4935021-e18e-5489-9614-409460386fbe",
+          "window_id": "adfe1e18-1957-50ba-8a22-6c39adaaf3b4",
+          "subsystem": "thermal",
+          "anomaly_score": 0.04,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "94fddd9a-22ee-5a38-8667-0dad0d342565",
+          "window_id": "adfe1e18-1957-50ba-8a22-6c39adaaf3b4",
+          "subsystem": "attitude",
+          "anomaly_score": 0.06,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "attitude-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "d1f1fade-eba2-519a-83e3-ebab633c153d",
+          "window_id": "adfe1e18-1957-50ba-8a22-6c39adaaf3b4",
+          "subsystem": "communications",
+          "anomaly_score": 0.02,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "communications-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "nominal",
+      "corroborating_subsystems": [],
+      "attributed_subsystem": null,
+      "fusion_rule_applied": "nominal",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "99491829-da05-50ca-96a9-9b5d157abc96",
+      "decision_id": "b1451c3b-1bae-502c-aeec-681eb7074778",
+      "text": "All satellite telemetry subsystems (Power, Thermal, Attitude, Communications) are operating within nominal boundaries with no anomalies detected.",
+      "cited_channels": [],
+      "cited_severity": "nominal",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "8ccbb5d1-1b75-5272-aa75-5a38bcdc8b3e",
+      "explanation_id": "99491829-da05-50ca-96a9-9b5d157abc96",
+      "status": "grounded",
+      "ungrounded_claims": [],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-004",
+    "category": "fully_grounded",
+    "ground_truth_label": "grounded",
+    "is_grounded": true,
+    "reason": "Accurately cites channel A-1, severity advisory, and attitude subsystem attribution.",
+    "evidence": {
+      "decision_id": "0328b573-bc80-5af5-b0b9-c84bada8a060",
+      "window_id": "5ab40d3c-35c5-50a7-88a9-adb9d081dc94",
+      "opinions": [
+        {
+          "opinion_id": "6915fa65-d656-51e8-a138-b33d239059fe",
+          "window_id": "5ab40d3c-35c5-50a7-88a9-adb9d081dc94",
+          "subsystem": "power",
+          "anomaly_score": 0.04,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "baf99bc5-6cbd-52c9-8f02-32ade0936633",
+          "window_id": "5ab40d3c-35c5-50a7-88a9-adb9d081dc94",
+          "subsystem": "thermal",
+          "anomaly_score": 0.03,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "a0a66d9f-5ad7-541b-9b3e-da3c73c80a42",
+          "window_id": "5ab40d3c-35c5-50a7-88a9-adb9d081dc94",
+          "subsystem": "attitude",
+          "anomaly_score": 0.58,
+          "severity": "advisory",
+          "responsible_channels": [
+            "A-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "attitude-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        },
+        {
+          "opinion_id": "84177e25-bf50-54f0-9b6e-c4d5db960679",
+          "window_id": "5ab40d3c-35c5-50a7-88a9-adb9d081dc94",
+          "subsystem": "communications",
+          "anomaly_score": 0.05,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "communications-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "advisory",
+      "corroborating_subsystems": [
+        "attitude"
+      ],
+      "attributed_subsystem": "attitude",
+      "fusion_rule_applied": "single-subsystem-advisory",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "183bb416-89c9-524b-9aef-0dc37d8260fd",
+      "decision_id": "0328b573-bc80-5af5-b0b9-c84bada8a060",
+      "text": "The attitude subsystem generated an advisory alert following low-magnitude deviation on rate gyro channel A-1.",
+      "cited_channels": [
+        "A-1"
+      ],
+      "cited_severity": "advisory",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "d7b1c8f7-1068-5d47-9ae6-02c351231765",
+      "explanation_id": "183bb416-89c9-524b-9aef-0dc37d8260fd",
+      "status": "grounded",
+      "ungrounded_claims": [],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-005",
+    "category": "unsupported_numerical_claim",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Explanation introduces specific engineering numbers (14.2V, 88.5A, 94.3%) not found in the evidence object.",
+    "evidence": {
+      "decision_id": "39fb9b41-5079-5ad7-bcbe-d5f4d6d64939",
+      "window_id": "04faada1-47b4-5b53-b864-4c1f275b2e37",
+      "opinions": [
+        {
+          "opinion_id": "90a2f995-7d6a-5048-9d9c-7ffac8ea6240",
+          "window_id": "04faada1-47b4-5b53-b864-4c1f275b2e37",
+          "subsystem": "power",
+          "anomaly_score": 0.78,
+          "severity": "warning",
+          "responsible_channels": [
+            "P-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "power"
+      ],
+      "attributed_subsystem": "power",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "48e22c2b-5abb-5087-9955-7efb4fe0bfb7",
+      "decision_id": "39fb9b41-5079-5ad7-bcbe-d5f4d6d64939",
+      "text": "Bus voltage dropped to 14.2V with an extreme discharge current of 88.5A and 94.3% depth-of-discharge on channel P-1.",
+      "cited_channels": [
+        "P-1"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "602d53d6-5633-5187-b2cf-67bd5fb5510c",
+      "explanation_id": "48e22c2b-5abb-5087-9955-7efb4fe0bfb7",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Unsupported numerical claims: 14.2V, 88.5A, and 94.3% DoD are not present in FusionDecision evidence"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-006",
+    "category": "unsupported_numerical_claim",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Cites ungrounded physical temperature values (148.6\u00b0C and 35.2\u00b0C) not present in normalized evidence.",
+    "evidence": {
+      "decision_id": "5beb3d76-65ed-524e-b9e2-d61190f3f468",
+      "window_id": "f586cdab-5e03-5bcb-a8c9-9a0e7eb92945",
+      "opinions": [
+        {
+          "opinion_id": "65c66e59-003c-586e-a69c-50f3072ddc03",
+          "window_id": "f586cdab-5e03-5bcb-a8c9-9a0e7eb92945",
+          "subsystem": "thermal",
+          "anomaly_score": 0.74,
+          "severity": "warning",
+          "responsible_channels": [
+            "T-2"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "thermal"
+      ],
+      "attributed_subsystem": "thermal",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "8c48f97c-34b4-50e7-a3bf-fd3b94d9f145",
+      "decision_id": "5beb3d76-65ed-524e-b9e2-d61190f3f468",
+      "text": "Thermal channel T-2 reached 148.6 degrees Celsius, exceeding maximum operating threshold by 35.2 degrees.",
+      "cited_channels": [
+        "T-2"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "f75d3304-e9de-5c39-b9f9-29be5e489d82",
+      "explanation_id": "8c48f97c-34b4-50e7-a3bf-fd3b94d9f145",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Unsupported numerical claims: 148.6\u00b0C and 35.2\u00b0C excess are not present in evidence"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-007",
+    "category": "invented_telemetry_observation",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Cites fabricated channel COMM_FREQ_SYNTH_99 which does not exist in any specialist opinion or evidence.",
+    "evidence": {
+      "decision_id": "b3e6b9e7-603b-58f1-b96e-966f24254f97",
+      "window_id": "70a3dd38-6077-54e7-a20d-3f6ddad3c724",
+      "opinions": [
+        {
+          "opinion_id": "d81405a0-8752-5016-ba2b-c41b182a6fd1",
+          "window_id": "70a3dd38-6077-54e7-a20d-3f6ddad3c724",
+          "subsystem": "communications",
+          "anomaly_score": 0.84,
+          "severity": "warning",
+          "responsible_channels": [
+            "C-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "communications-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "communications"
+      ],
+      "attributed_subsystem": "communications",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "261f7fe3-9df5-56bf-b507-dce33887de17",
+      "decision_id": "b3e6b9e7-603b-58f1-b96e-966f24254f97",
+      "text": "Communications subsystem experienced downlink loss on channel C-1 accompanied by frequency synthesizer drift on COMM_FREQ_SYNTH_99.",
+      "cited_channels": [
+        "C-1",
+        "COMM_FREQ_SYNTH_99"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "1018f835-9650-5a25-8d7d-9959d44218da",
+      "explanation_id": "261f7fe3-9df5-56bf-b507-dce33887de17",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Invented channel citation: 'COMM_FREQ_SYNTH_99' does not exist in FusionDecision evidence"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-008",
+    "category": "invented_telemetry_observation",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Cites non-existent channel PAYLOAD_CAMERA_CCD in cited_channels and text.",
+    "evidence": {
+      "decision_id": "0676fa08-446d-5e5f-b48d-51fdec1c9f52",
+      "window_id": "1120e8a5-73b2-58e7-ba06-1a2eede8b385",
+      "opinions": [
+        {
+          "opinion_id": "d4743d4b-1001-501e-b955-c0ab42f67bc9",
+          "window_id": "1120e8a5-73b2-58e7-ba06-1a2eede8b385",
+          "subsystem": "thermal",
+          "anomaly_score": 0.6,
+          "severity": "advisory",
+          "responsible_channels": [
+            "T-3"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "advisory",
+      "corroborating_subsystems": [
+        "thermal"
+      ],
+      "attributed_subsystem": "thermal",
+      "fusion_rule_applied": "single-subsystem-advisory",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "29f284b6-f5e3-5902-839c-21749a4d1270",
+      "decision_id": "0676fa08-446d-5e5f-b48d-51fdec1c9f52",
+      "text": "Thermal advisory on T-3 with sensor saturation observed on PAYLOAD_CAMERA_CCD.",
+      "cited_channels": [
+        "T-3",
+        "PAYLOAD_CAMERA_CCD"
+      ],
+      "cited_severity": "advisory",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "902e7445-b4d7-5d0b-9cad-aaf10473d385",
+      "explanation_id": "29f284b6-f5e3-5902-839c-21749a4d1270",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Invented channel citation: 'PAYLOAD_CAMERA_CCD' is not in evidence"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-009",
+    "category": "incorrect_subsystem_attribution",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Claims communications subsystem failure when evidence clearly attributes anomaly to attitude subsystem.",
+    "evidence": {
+      "decision_id": "1b058af3-f398-5e39-98f6-47cc15435196",
+      "window_id": "101d517b-0aa0-5942-a39d-ce821f227650",
+      "opinions": [
+        {
+          "opinion_id": "7fdee47f-b001-5296-8b17-4efab0af91e4",
+          "window_id": "101d517b-0aa0-5942-a39d-ce821f227650",
+          "subsystem": "attitude",
+          "anomaly_score": 0.88,
+          "severity": "warning",
+          "responsible_channels": [
+            "A-2"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "attitude-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.293861Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "attitude"
+      ],
+      "attributed_subsystem": "attitude",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.293861Z"
+    },
+    "explanation": {
+      "explanation_id": "db1f8399-1e37-563c-abd5-0fa87436929a",
+      "decision_id": "1b058af3-f398-5e39-98f6-47cc15435196",
+      "text": "The communications subsystem has suffered an antenna tracking failure on channel A-2 preventing ground contact.",
+      "cited_channels": [
+        "A-2"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "5f2f00a4-c697-5373-8b96-e58ae082669d",
+      "explanation_id": "db1f8399-1e37-563c-abd5-0fa87436929a",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Incorrect subsystem attribution: claims communications failure when evidence attributes attitude"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-010",
+    "category": "incorrect_subsystem_attribution",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Attributes anomaly to power subsystem despite decision indicating thermal subsystem attribution.",
+    "evidence": {
+      "decision_id": "70245e3a-56f9-5fa3-874b-72408ffbc88d",
+      "window_id": "a385106d-8c08-514a-abde-7834f83b6bf6",
+      "opinions": [
+        {
+          "opinion_id": "b9fdfe20-7a6d-5d1e-93cb-82d0a8725a8e",
+          "window_id": "a385106d-8c08-514a-abde-7834f83b6bf6",
+          "subsystem": "thermal",
+          "anomaly_score": 0.92,
+          "severity": "critical",
+          "responsible_channels": [
+            "T-1",
+            "T-2"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "critical",
+      "corroborating_subsystems": [
+        "thermal"
+      ],
+      "attributed_subsystem": "thermal",
+      "fusion_rule_applied": "multi-channel-critical",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "b1e2c202-61eb-58f5-ae09-fda008c40731",
+      "decision_id": "70245e3a-56f9-5fa3-874b-72408ffbc88d",
+      "text": "The power subsystem suffered a total electrical blackout causing emergency shutdown on lines T-1 and T-2.",
+      "cited_channels": [
+        "T-1",
+        "T-2"
+      ],
+      "cited_severity": "critical",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "116846d5-f042-5406-bbcf-8d91762ca8ae",
+      "explanation_id": "b1e2c202-61eb-58f5-ae09-fda008c40731",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Incorrect subsystem attribution: attributes anomaly to power subsystem when evidence attributes thermal"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-011",
+    "category": "unsupported_anomaly_severity",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "LLM escalates severity from advisory to critical, violating ADR-0002 R1.",
+    "evidence": {
+      "decision_id": "b3dc94b2-b1b5-5175-a708-9f60d03699f1",
+      "window_id": "70b253eb-a2b8-59ba-9021-1f41481bf227",
+      "opinions": [
+        {
+          "opinion_id": "24238666-07b7-5910-8419-65833ae0fe95",
+          "window_id": "70b253eb-a2b8-59ba-9021-1f41481bf227",
+          "subsystem": "power",
+          "anomaly_score": 0.52,
+          "severity": "advisory",
+          "responsible_channels": [
+            "P-3"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "advisory",
+      "corroborating_subsystems": [
+        "power"
+      ],
+      "attributed_subsystem": "power",
+      "fusion_rule_applied": "single-subsystem-advisory",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "43c344a4-3125-5280-a530-3aca5dc30d2a",
+      "decision_id": "b3dc94b2-b1b5-5175-a708-9f60d03699f1",
+      "text": "CRITICAL failure: immediate safe mode entry required due to severe degradation on channel P-3.",
+      "cited_channels": [
+        "P-3"
+      ],
+      "cited_severity": "critical",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "4c2268d0-b4e3-5c85-a701-24cb9c4f256a",
+      "explanation_id": "43c344a4-3125-5280-a530-3aca5dc30d2a",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Unsupported severity escalation: cited severity 'critical' does not match fused severity 'advisory'"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-012",
+    "category": "unsupported_anomaly_severity",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "LLM de-escalates fused critical severity to nominal, masking an active multi-subsystem critical anomaly.",
+    "evidence": {
+      "decision_id": "9a24b4fa-bfed-5c9f-9a89-91c24783a11f",
+      "window_id": "11c0a83d-9cf9-5ead-a76c-af6bc8e8f9c6",
+      "opinions": [
+        {
+          "opinion_id": "80346cdb-4457-5b2a-badb-629eecd290b8",
+          "window_id": "11c0a83d-9cf9-5ead-a76c-af6bc8e8f9c6",
+          "subsystem": "power",
+          "anomaly_score": 0.94,
+          "severity": "critical",
+          "responsible_channels": [
+            "P-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        },
+        {
+          "opinion_id": "4a2fd2f7-94fe-5682-8483-75e09e7c2244",
+          "window_id": "11c0a83d-9cf9-5ead-a76c-af6bc8e8f9c6",
+          "subsystem": "thermal",
+          "anomaly_score": 0.91,
+          "severity": "critical",
+          "responsible_channels": [
+            "T-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "critical",
+      "corroborating_subsystems": [
+        "power",
+        "thermal"
+      ],
+      "attributed_subsystem": "power",
+      "fusion_rule_applied": "corroborated-critical",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "8f048cda-b89b-55f6-a8eb-c9112818dec9",
+      "decision_id": "9a24b4fa-bfed-5c9f-9a89-91c24783a11f",
+      "text": "Telemetry on channels P-1 and T-1 exhibits only harmless transient noise; system status is nominal.",
+      "cited_channels": [
+        "P-1",
+        "T-1"
+      ],
+      "cited_severity": "nominal",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "fead693f-eed5-5720-9977-c4eea6020a6b",
+      "explanation_id": "8f048cda-b89b-55f6-a8eb-c9112818dec9",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Unsupported severity de-escalation: cited severity 'nominal' does not match fused severity 'critical'"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-013",
+    "category": "contradiction_with_evidence",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Directly contradicts evidence by claiming power is flawless and communications crashed on power channels.",
+    "evidence": {
+      "decision_id": "42c08dce-5ccf-55b9-83b4-90a572a4e8b1",
+      "window_id": "de43f13b-3076-5c87-9a4a-b66111cae521",
+      "opinions": [
+        {
+          "opinion_id": "bf7984b1-8d5a-5c0d-bf8d-513dd215c6ac",
+          "window_id": "de43f13b-3076-5c87-9a4a-b66111cae521",
+          "subsystem": "power",
+          "anomaly_score": 0.96,
+          "severity": "critical",
+          "responsible_channels": [
+            "P-1",
+            "P-2"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        },
+        {
+          "opinion_id": "6b18f590-d5a3-516e-b969-5ca117b50c29",
+          "window_id": "de43f13b-3076-5c87-9a4a-b66111cae521",
+          "subsystem": "communications",
+          "anomaly_score": 0.02,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "communications-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "critical",
+      "corroborating_subsystems": [
+        "power"
+      ],
+      "attributed_subsystem": "power",
+      "fusion_rule_applied": "multi-channel-critical",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "09021cd0-2216-56eb-a27d-1871973504d6",
+      "decision_id": "42c08dce-5ccf-55b9-83b4-90a572a4e8b1",
+      "text": "The power subsystem is operating flawlessly with zero anomalies, while communications subsystem suffered an unrecoverable crash on channels P-1 and P-2.",
+      "cited_channels": [
+        "P-1",
+        "P-2"
+      ],
+      "cited_severity": "critical",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "8fc47a19-89fd-543b-a308-ef87e0b0b196",
+      "explanation_id": "09021cd0-2216-56eb-a27d-1871973504d6",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Direct contradiction with evidence: asserts power is flawless when evidence shows critical power anomaly"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-014",
+    "category": "contradiction_with_evidence",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Directly contradicts evidence: claims thermal T-1 is nominal when it is anomalous, and claims attitude tumbling when attitude is nominal.",
+    "evidence": {
+      "decision_id": "9be62ee3-8bda-5c53-adc3-76a693c2a12b",
+      "window_id": "54c2f7a7-1fae-59a1-b816-a9450bd5ef93",
+      "opinions": [
+        {
+          "opinion_id": "c66faf9c-7177-5565-b1b4-9d3aa3350176",
+          "window_id": "54c2f7a7-1fae-59a1-b816-a9450bd5ef93",
+          "subsystem": "thermal",
+          "anomaly_score": 0.76,
+          "severity": "warning",
+          "responsible_channels": [
+            "T-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        },
+        {
+          "opinion_id": "3fa0b097-983e-57b3-9227-31e17e5a0422",
+          "window_id": "54c2f7a7-1fae-59a1-b816-a9450bd5ef93",
+          "subsystem": "attitude",
+          "anomaly_score": 0.01,
+          "severity": "nominal",
+          "responsible_channels": [],
+          "threshold_used": 0.5,
+          "model_run_id": "attitude-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "thermal"
+      ],
+      "attributed_subsystem": "thermal",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "e3d0be8b-69b9-54ef-a968-2cb773a6bed6",
+      "decision_id": "9be62ee3-8bda-5c53-adc3-76a693c2a12b",
+      "text": "A warning alert is triggered because satellite is in an uncontrolled spin tumble, while thermal telemetry T-1 is completely nominal.",
+      "cited_channels": [
+        "T-1"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "18a5cc1c-b048-5f79-a861-acbd6dba7ba0",
+      "explanation_id": "e3d0be8b-69b9-54ef-a968-2cb773a6bed6",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Direct contradiction with evidence: asserts attitude tumbling failure and nominal thermal telemetry"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-015",
+    "category": "missing_causal_evidence",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Speculates external physical root cause (micrometeoroid impact, wheel rupture) unsupported by telemetry evidence.",
+    "evidence": {
+      "decision_id": "502ba76f-b401-5a9b-aa06-d16c6e952cc0",
+      "window_id": "6d1e9fb8-c4cb-55e3-b594-067a16229ff1",
+      "opinions": [
+        {
+          "opinion_id": "1eb8684c-6075-550d-ab89-d57e65982279",
+          "window_id": "6d1e9fb8-c4cb-55e3-b594-067a16229ff1",
+          "subsystem": "attitude",
+          "anomaly_score": 0.81,
+          "severity": "warning",
+          "responsible_channels": [
+            "A-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "attitude-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "attitude"
+      ],
+      "attributed_subsystem": "attitude",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "6956ce43-105a-52b1-8b15-c62e88b435a5",
+      "decision_id": "502ba76f-b401-5a9b-aa06-d16c6e952cc0",
+      "text": "The rate gyro anomaly on channel A-1 was caused by an orbital micrometeoroid impact rupturing the reaction wheel casing and creating debris hazard.",
+      "cited_channels": [
+        "A-1"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "4b704f4e-1ea6-58b2-bf1d-8be0c7e86b00",
+      "explanation_id": "6956ce43-105a-52b1-8b15-c62e88b435a5",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Missing evidence for causal claim: speculative micrometeoroid impact and structural rupture"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-016",
+    "category": "missing_causal_evidence",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Speculates space weather root cause (coronal mass ejection) without space environment telemetry in evidence.",
+    "evidence": {
+      "decision_id": "ef795a2e-91fe-5dac-9cb0-7277487c8b26",
+      "window_id": "51c99cdb-a23c-53f7-a8f0-933b7ef4f59e",
+      "opinions": [
+        {
+          "opinion_id": "1b334f51-73d3-5874-9e17-055580c571e1",
+          "window_id": "51c99cdb-a23c-53f7-a8f0-933b7ef4f59e",
+          "subsystem": "power",
+          "anomaly_score": 0.79,
+          "severity": "warning",
+          "responsible_channels": [
+            "P-2"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "power"
+      ],
+      "attributed_subsystem": "power",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "b93415ac-6faa-5da3-80ba-cfd50ccc1bb3",
+      "decision_id": "ef795a2e-91fe-5dac-9cb0-7277487c8b26",
+      "text": "A severe coronal mass ejection and solar flare bombardment ionized the solar panel surface, triggering voltage breakdown on channel P-2.",
+      "cited_channels": [
+        "P-2"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "b28278cd-b61c-5532-a397-386c13fc74e0",
+      "explanation_id": "b93415ac-6faa-5da3-80ba-cfd50ccc1bb3",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Missing evidence for causal claim: speculative coronal mass ejection and ionization breakdown"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-017",
+    "category": "partially_grounded",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Channel P-1 is valid, but channel P-4 was not anomalous in the evidence. Verifier rejects any ungrounded citation.",
+    "evidence": {
+      "decision_id": "d2a34bae-f066-55b0-9e75-8b90261a677a",
+      "window_id": "8eacb1ba-642f-5596-aaa6-77f783fca467",
+      "opinions": [
+        {
+          "opinion_id": "d61e3b66-6668-5c5f-97be-9084051b61a0",
+          "window_id": "8eacb1ba-642f-5596-aaa6-77f783fca467",
+          "subsystem": "power",
+          "anomaly_score": 0.84,
+          "severity": "warning",
+          "responsible_channels": [
+            "P-1"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "power-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "warning",
+      "corroborating_subsystems": [
+        "power"
+      ],
+      "attributed_subsystem": "power",
+      "fusion_rule_applied": "single-subsystem-warning",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "44f341cf-14b5-56d7-afc8-fd5cd636b010",
+      "decision_id": "d2a34bae-f066-55b0-9e75-8b90261a677a",
+      "text": "The power subsystem triggered a warning based on anomalous telemetry on channel P-1 corroborated by secondary bus channel P-4.",
+      "cited_channels": [
+        "P-1",
+        "P-4"
+      ],
+      "cited_severity": "warning",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "7023bad0-dfea-54d5-98b7-31303b2053ae",
+      "explanation_id": "44f341cf-14b5-56d7-afc8-fd5cd636b010",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Partially grounded: valid citation of P-1, but ungrounded citation of non-anomalous channel P-4"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  },
+  {
+    "id": "GOLDEN-GROUNDING-018",
+    "category": "partially_grounded",
+    "ground_truth_label": "ungrounded",
+    "is_grounded": false,
+    "reason": "Channels T-1/T-2 and severity critical are correct, but text asserts ungrounded physical claim of pyrotechnic release.",
+    "evidence": {
+      "decision_id": "4d95a633-9f12-518f-8055-afd43526bda5",
+      "window_id": "08a2f963-6101-59ca-8f40-fecfa0f1ca6d",
+      "opinions": [
+        {
+          "opinion_id": "1dda6e93-d922-574b-9200-0115c55e1624",
+          "window_id": "08a2f963-6101-59ca-8f40-fecfa0f1ca6d",
+          "subsystem": "thermal",
+          "anomaly_score": 0.93,
+          "severity": "critical",
+          "responsible_channels": [
+            "T-1",
+            "T-2"
+          ],
+          "threshold_used": 0.5,
+          "model_run_id": "thermal-specialist-v1",
+          "created_at": "2026-11-14T12:17:31.294868Z"
+        }
+      ],
+      "severity": "critical",
+      "corroborating_subsystems": [
+        "thermal"
+      ],
+      "attributed_subsystem": "thermal",
+      "fusion_rule_applied": "multi-channel-critical",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "explanation": {
+      "explanation_id": "fe2de0fa-7df9-54f5-8328-03568ddbebc3",
+      "decision_id": "4d95a633-9f12-518f-8055-afd43526bda5",
+      "text": "Critical thermal runaway on channels T-1 and T-2 has triggered explosive pyrotechnic actuator release of the secondary payload.",
+      "cited_channels": [
+        "T-1",
+        "T-2"
+      ],
+      "cited_severity": "critical",
+      "prompt_version": "v0.1-placeholder",
+      "llm_model": "gpt-4o-mini",
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    },
+    "expected_verifier_result": {
+      "verifier_id": "25442ad7-4a5f-5844-8e29-d9f4c5fb97be",
+      "explanation_id": "fe2de0fa-7df9-54f5-8328-03568ddbebc3",
+      "status": "ungrounded",
+      "ungrounded_claims": [
+        "Partially grounded: channels and severity are valid, but pyrotechnic actuator firing claim is unsupported by evidence"
+      ],
+      "retry_count": 0,
+      "created_at": "2026-11-14T12:17:31.294868Z"
+    }
+  }
+]
