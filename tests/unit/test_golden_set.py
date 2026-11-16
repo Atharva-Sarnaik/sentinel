@@ -175,18 +175,16 @@ def test_golden_set_determinism() -> None:
 
 def test_golden_set_existing_verifier_behavior_unchanged() -> None:
     """
-    Verify existing verifier behavior is preserved without modification.
+    Verify verifier behavior against golden examples.
 
-    Under Tier 3 scaffolding, check_grounding raises NotImplementedError.
-    This test verifies that calling check_grounding on golden examples explicitly
-    reflects the repository's current status and confirms the verifier was not
-    tampered with or silently mocked.
+    Validates that calling check_grounding on golden examples produces a
+    valid VerifierResult matching the example's expected status.
     """
     examples = load_grounding_golden_set()
     first_example = examples[0]
 
-    with pytest.raises(NotImplementedError, match="check_grounding: implementation pending"):
-        check_grounding(first_example.explanation, first_example.evidence)
+    result = check_grounding(first_example.explanation, first_example.evidence)
+    assert result.status == first_example.expected_verifier_result.status
 
 
 def test_golden_set_loader_error_handling() -> None:

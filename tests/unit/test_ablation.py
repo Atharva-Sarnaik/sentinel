@@ -295,8 +295,13 @@ def test_run_ablation_arm_d_independent_specialists() -> None:
     assert res_d["per_subsystem_anomaly_counts"]["thermal"] == 1
 
 
-def test_run_ablation_arm_e_blocked_graceful() -> None:
-    """Verify Arm E cleanly reports BLOCKED_PENDING_TIER_3 when Tier 3 is unimplemented."""
+def test_run_ablation_arm_e_blocked_graceful(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify Arm E cleanly reports BLOCKED_PENDING_TIER_3 when Tier 3 raises NotImplementedError."""
+
+    def mock_not_implemented(*args: Any, **kwargs: Any) -> Any:
+        raise NotImplementedError("run_pipeline: implementation pending task T3.1.")
+
+    monkeypatch.setattr("services.orchestrator.graph.run_pipeline", mock_not_implemented)
     windows = [_make_dummy_window(0)]
     results = run_ablation(windows=windows, arms=("E",))
 
@@ -566,8 +571,15 @@ def test_run_ablation_arm_d_per_window_predictions_and_metrics() -> None:
     assert res_d["false_positive_rate"] == 0.0
 
 
-def test_run_ablation_arm_e_default_orchestrator_blocked() -> None:
+def test_run_ablation_arm_e_default_orchestrator_blocked(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """Verify Arm E dynamically invokes default orchestrator and catches NotImplementedError."""
+
+    def mock_not_implemented(*args: Any, **kwargs: Any) -> Any:
+        raise NotImplementedError("run_pipeline: pending")
+
+    monkeypatch.setattr("services.orchestrator.graph.run_pipeline", mock_not_implemented)
     windows = [_make_dummy_window(0)]
     results = run_ablation(windows=windows, arms=("E",))
 

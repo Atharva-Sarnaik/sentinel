@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Sequence
+from typing import Any
 
 from libs.contracts import Severity, SpecialistOpinion, TelemetryWindow
 
@@ -151,11 +152,53 @@ class StaticThresholdBaseline:
         self,
         windows: Sequence[TelemetryWindow],
         percentile: float = 99.0,
+        lower_percentile: float | None = None,
+        upper_percentile: float | None = None,
     ) -> StaticThresholdBaseline:
         """Calibrate channel thresholds from normal training telemetry windows."""
-        self.thresholds = calibrate_static_thresholds(windows, percentile=percentile)
+        p = upper_percentile if upper_percentile is not None else percentile
+        self.thresholds = calibrate_static_thresholds(windows, percentile=p)
         return self
 
-    def predict(self, window: TelemetryWindow) -> SpecialistOpinion:
+    def predict(
+        self,
+        window: TelemetryWindow,
+        model_run_id: str | None = None,
+    ) -> SpecialistOpinion:
         """Evaluate a TelemetryWindow and produce a SpecialistOpinion."""
-        return run_static_threshold(window, self.thresholds, model_run_id=self.model_run_id)
+        run_id = model_run_id or self.model_run_id
+        return run_static_threshold(window, self.thresholds, model_run_id=run_id)
+
+
+def evaluate_static_threshold(
+    windows: Sequence[TelemetryWindow],
+    baseline: StaticThresholdBaseline,
+    ground_truth: Sequence[bool],
+) -> dict[str, Any]:
+    """
+    Evaluate StaticThresholdBaseline on test windows against binary ground truth.
+    """
+    opinions = [baseline.predict(w) for w in windows]
+    predictions = [op.is_anomalous for op in opinions]
+    tp = sum(1 for p, y in zip(predictions, ground_truth) if p and y)
+    fp = sum(1 for p, y in zip(predictions, ground_truth) if p and not y)
+    tn = sum(1 for p, y in zip(predictions, ground_truth) if not p and not y)
+    fn = sum(1 for p, y in zip(predictions, ground_truth) if not p and y)
+
+    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+    f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+    fpr = fp / (fp + tn) if (fp + tn) > 0 else 0.0
+
+    return {
+        "true_positives": tp,
+        "false_positives": fp,
+        "true_negatives": tn,
+        "false_negatives": fn,
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "f1": round(f1, 4),
+        "false_positive_rate": round(fpr, 4),
+        "total_windows": len(windows),
+        "anomaly_count": sum(1 for p in predictions if p),
+    }
