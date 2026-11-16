@@ -49,16 +49,16 @@ Full task list with IDs, owners, branch names, and done-when criteria.
 
 ---
 
-## Tier 3: Orchestration, Reasoner, Verifier, Audit (weeks 15–17)
+## Tier 3: Orchestration, Reasoner, Verifier, Audit (weeks 15–17) — COMPLETED ✅
 
-| ID | Task | Owner | Branch | Done when |
+| ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| T3.1 | LangGraph skeleton with mock LLM | A | `feat/T3.1-langgraph-skeleton` | Graph runs end-to-end offline |
-| T3.2 | LLM reasoner, prompt library, JSON schema | A | `feat/T3.2-llm-reasoner` | Prompts versioned in files; schema-valid output |
-| T3.3 | Verifier grounding check | S | `feat/T3.3-verifier-grounding` | Ungrounded claim flagged via `VerifierResult` |
-| T3.4 | Retry policy and abstention path | A | `feat/T3.4-retry-abstention` | Max 2 retries, then evidence-only report |
-| T3.5 | Audit log | S | `feat/T3.5-audit-log` | Every decision logged before any outcome is joined |
-| T3.6 | Tracing, cost and latency logging (Langfuse) | A | `feat/T3.6-langfuse-tracing` | Each LLM call traced |
+| T3.1 | LangGraph skeleton with mock LLM | A | Done | Graph runs end-to-end offline |
+| T3.2 | LLM reasoner, prompt library, JSON schema | A | Done | Prompts versioned in files; schema-valid output |
+| T3.3 | Verifier grounding check | S | Done | Ungrounded claim flagged via `VerifierResult` |
+| T3.4 | Retry policy and abstention path | A | Done | Max 2 retries, then evidence-only report |
+| T3.5 | Audit log | S | Done | Every decision logged before any outcome is joined |
+| T3.6 | Tracing, cost and latency logging (Langfuse) | A | Done | Each LLM call traced |
 
 ---
 

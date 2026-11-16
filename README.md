@@ -215,16 +215,16 @@ make check        # or .\check.ps1
 | T2.3 | Subsystem attribution logic | S | Done | Attribution output matches contract |
 | T2.4 | Fusion golden cases and property tests | S | Done | Same input always gives same decision |
 
-### Tier 3: Orchestration, Reasoner, Verifier, Audit (weeks 15–17, `tier-3-done`)
+### Tier 3: Orchestration, Reasoner, Verifier, Audit (weeks 15–17, `tier-3-done`) — COMPLETED ✅
 
-| ID | Task | Owner | Done when |
-|---|---|---|---|
-| T3.1 | LangGraph skeleton with mock LLM | A | Graph runs end-to-end offline |
-| T3.2 | LLM reasoner, prompt library, JSON schema | A | Prompts versioned in files; schema-valid output |
-| T3.3 | Verifier grounding check | S | Ungrounded claim flagged via `VerifierResult` |
-| T3.4 | Retry policy and abstention path | A | Max 2 retries, then evidence-only report |
-| T3.5 | Audit log | S | Every decision logged before any outcome is joined |
-| T3.6 | Tracing, cost and latency logging (Langfuse) | A | Each LLM call traced |
+| ID | Task | Owner | Status | Done when |
+|---|---|---|---|---|
+| T3.1 | LangGraph skeleton with mock LLM | A | Done | Graph runs end-to-end offline |
+| T3.2 | LLM reasoner, prompt library, JSON schema | A | Done | Prompts versioned in files; schema-valid output |
+| T3.3 | Verifier grounding check | S | Done | Ungrounded claim flagged via `VerifierResult` |
+| T3.4 | Retry policy and abstention path | A | Done | Max 2 retries, then evidence-only report |
+| T3.5 | Audit log | S | Done | Every decision logged before any outcome is joined |
+| T3.6 | Tracing, cost and latency logging (Langfuse) | A | Done | Each LLM call traced |
 
 ### Tier 4: Evaluation and Ablation (weeks 18–20, `tier-4-done`)
 

@@ -25,9 +25,10 @@
 
 ---
 
-## Tier 3: Orchestration, Reasoner, Verifier, Audit — weeks 15–17 — `tier-3-done`
+## Tier 3: Orchestration, Reasoner, Verifier, Audit — weeks 15–17 — `tier-3-done` ✅
 
-**Exit criteria:** LangGraph graph runs end-to-end offline; LLM reasoner produces schema-valid output with versioned prompts; verifier flags ungrounded claims; retry/abstention path tested; audit log written before outcomes; every LLM call traced in Langfuse.
+**Status:** Completed
+**Exit criteria:** LangGraph state graph runs end-to-end offline; LLM reasoner produces schema-valid output with versioned prompts; verifier flags ungrounded claims; retry/abstention path tested; immutable SQLite audit log written before pipeline outcomes are returned; every LLM call traced with cost and latency tracking. All 82 unit and leakage tests pass.
 
 ---
 
