@@ -240,7 +240,7 @@ export function Header() {
 
                 {!isReplaying ? (
                   <button
-                    onClick={startHistoricalReplay}
+                    onClick={() => startHistoricalReplay()}
                     className="flex items-center gap-1 px-2 py-0.5 rounded bg-secondary text-on-secondary font-sans text-[10px] font-bold uppercase hover:opacity-90"
                     type="button"
                     title="Start historical NASA telemetry replay"

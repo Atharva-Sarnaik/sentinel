@@ -346,6 +346,10 @@ def generate_explanation_with_metadata(
     active_key = api_key if api_key is not None else config["api_key"]
     model_name = llm_model or config["model"]
 
+    # During pytest runs, prevent background test loops from exhausting external API quota unless explicitly provided
+    if os.environ.get("PYTEST_CURRENT_TEST") and api_key is None and not os.environ.get("RUN_LIVE_LLM_TESTS"):
+        active_key = None
+
     # Explicit offline mock requested
     if model_name == "mock-reasoner" or inject_hallucination:
         start_time = time.perf_counter()

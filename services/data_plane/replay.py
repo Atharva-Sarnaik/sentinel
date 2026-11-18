@@ -216,6 +216,8 @@ class HistoricalReplayManager:
         stride: int = 10,
         speed_delay_ms: int = 500,
         max_windows: int | None = None,
+        start_window: int = 0,
+        pause_on_anomaly: bool = False,
     ) -> dict[str, Any]:
         """Start a new historical telemetry replay session."""
         async with self._lock:
@@ -266,12 +268,14 @@ class HistoricalReplayManager:
             self.stride = stride
             self.speed_delay_ms = max(0, speed_delay_ms)
             self.max_windows = max_windows
+            self.start_window = max(0, start_window)
+            self.pause_on_anomaly = pause_on_anomaly
 
-            self.current_window_index = 0
+            self.current_window_index = self.start_window
             self.total_windows = total_calc
             self.processed_windows = 0
             self.failed_windows = 0
-            self.progress_percent = 0.0
+            self.progress_percent = (self.start_window / total_calc) * 100.0 if total_calc > 0 else 0.0
 
             self.is_anomalous = None
             self.latest_window = None
@@ -363,6 +367,9 @@ class HistoricalReplayManager:
                 if self._stop_requested:
                     break
 
+                if getattr(self, "start_window", 0) > 0 and idx < self.start_window:
+                    continue
+
                 if self.max_windows is not None and idx >= self.max_windows:
                     break
 
@@ -386,7 +393,7 @@ class HistoricalReplayManager:
                     self.current_window_index = idx + 1
                     self.processed_windows += 1
                     self.is_anomalous = is_anom
-                    self.progress_percent = min(100.0, (self.processed_windows / total_expected) * 100.0)
+                    self.progress_percent = min(100.0, (self.current_window_index / total_expected) * 100.0)
 
                     # Update snapshot of current window
                     self.latest_window = {
@@ -416,6 +423,12 @@ class HistoricalReplayManager:
                         "explanation_snippet": explanation.get("text", "")[:120] if explanation else "",
                     }
                     self.recent_history.append(history_entry)
+
+                    # Pause playback if configured to halt on anomaly
+                    if getattr(self, "pause_on_anomaly", False) and (is_anom or decision.get("severity", "nominal") != "nominal"):
+                        self.status = "paused"
+                        self._pause_event.clear()
+                        logger.info(f"Replay automatically paused on anomaly at window {self.current_window_index}")
 
                 except Exception as e:
                     logger.error(f"Error processing replay window {idx}: {e}", exc_info=True)

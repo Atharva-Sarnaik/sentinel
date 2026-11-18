@@ -187,6 +187,8 @@ export interface ReplayStartPayload {
   stride?: number;
   speed_delay_ms?: number;
   max_windows?: number | null;
+  start_window?: number;
+  pause_on_anomaly?: boolean;
 }
 
 export class ApiClientError extends Error {

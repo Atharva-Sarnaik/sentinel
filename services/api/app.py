@@ -212,6 +212,8 @@ class ReplayStartPayload(BaseModel):
     stride: int = Field(default=10, ge=1, description="Stride size in time steps")
     speed_delay_ms: int = Field(default=500, ge=0, description="Interval in ms between windows (0 = full speed)")
     max_windows: int | None = Field(default=None, description="Optional upper bound on windows for testing")
+    start_window: int = Field(default=0, ge=0, description="Optional starting window index")
+    pause_on_anomaly: bool = Field(default=False, description="Pause playback upon detecting an anomalous window")
 
 
 @app.get("/replay/channels", tags=["Historical Replay"])
@@ -255,6 +257,8 @@ async def start_replay(payload: ReplayStartPayload) -> dict[str, Any]:
             stride=payload.stride,
             speed_delay_ms=payload.speed_delay_ms,
             max_windows=payload.max_windows,
+            start_window=payload.start_window,
+            pause_on_anomaly=payload.pause_on_anomaly,
         )
         return status_dict
     except (ValueError, FileNotFoundError) as e:

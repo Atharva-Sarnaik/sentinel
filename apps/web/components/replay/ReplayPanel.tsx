@@ -30,6 +30,13 @@ export function ReplayPanel() {
     (c) => c.id === selectedChannel
   );
 
+  const [pauseOnAnomaly, setPauseOnAnomaly] = React.useState<boolean>(true);
+
+  const firstAnomalyWindow =
+    activeChannelMeta && activeChannelMeta.anomaly_intervals.length > 0
+      ? Math.max(0, Math.floor((activeChannelMeta.anomaly_intervals[0][0] - 50) / (replayStatus?.stride || 10)))
+      : null;
+
   const status = replayStatus?.status || "idle";
   const isRunning = status === "running";
   const isPaused = status === "paused";
@@ -198,11 +205,35 @@ export function ReplayPanel() {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2">
+        {/* Action Buttons & Anomaly Controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Pause on Anomaly Toggle */}
+          <label className="flex items-center gap-1.5 text-[11px] font-mono text-on-surface cursor-pointer select-none px-2 py-1 rounded bg-surface-container-lowest border border-surface-container">
+            <input
+              type="checkbox"
+              checked={pauseOnAnomaly}
+              onChange={(e) => setPauseOnAnomaly(e.target.checked)}
+              className="rounded text-secondary focus:ring-0 cursor-pointer"
+            />
+            <span className="font-semibold">Auto-Pause on Anomaly</span>
+          </label>
+
+          {/* Jump to Labeled Anomaly Button (if channel has known anomaly) */}
+          {firstAnomalyWindow !== null && !isRunning && (
+            <button
+              onClick={() => startHistoricalReplay(firstAnomalyWindow, pauseOnAnomaly)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-error/15 text-error border border-error/30 font-label-caps text-xs font-bold uppercase hover:bg-error/25 transition-colors shadow-sm"
+              type="button"
+              title={`Jump directly to labeled anomaly at window ${firstAnomalyWindow}`}
+            >
+              <span className="material-symbols-outlined text-[16px]">crisis_alert</span>
+              <span>Jump to Anomaly (W#{firstAnomalyWindow})</span>
+            </button>
+          )}
+
           {!isRunning && !isPaused && (
             <button
-              onClick={startHistoricalReplay}
+              onClick={() => startHistoricalReplay(0, pauseOnAnomaly)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-secondary text-on-secondary font-label-caps text-xs font-bold uppercase hover:opacity-90 transition-opacity shadow-sm"
               type="button"
             >

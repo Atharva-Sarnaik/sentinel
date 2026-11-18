@@ -66,7 +66,7 @@ export interface TelemetryContextType {
   setSelectedSplit: (split: "train" | "test") => void;
   setSelectedChannel: (ch: string) => void;
   setReplaySpeedMs: (ms: number) => void;
-  startHistoricalReplay: () => Promise<void>;
+  startHistoricalReplay: (startWindow?: number, pauseOnAnom?: boolean) => Promise<void>;
   pauseHistoricalReplay: () => Promise<void>;
   resumeHistoricalReplay: () => Promise<void>;
   stopHistoricalReplay: () => Promise<void>;
@@ -441,26 +441,65 @@ export function TelemetryProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const handleSelectChannel = useCallback((channel: string) => {
+    setSelectedChannel(channel);
+    setBackendWindow(null);
+    setLatestBackendResponse(null);
+    setReplayError(null);
+    setReplayStatus(null);
+  }, []);
+
+  const handleSelectDataset = useCallback((dataset: "SMAP" | "MSL") => {
+    setSelectedDataset(dataset);
+    setBackendWindow(null);
+    setLatestBackendResponse(null);
+    setReplayError(null);
+    setReplayStatus(null);
+  }, []);
+
+  const handleSelectSplit = useCallback((split: "train" | "test") => {
+    setSelectedSplit(split);
+    setBackendWindow(null);
+    setLatestBackendResponse(null);
+    setReplayError(null);
+    setReplayStatus(null);
+  }, []);
+
   // Start Historical Replay
-  const startHistoricalReplay = useCallback(async () => {
-    try {
-      setReplayError(null);
-      const initialStatus = await startReplay({
-        dataset: selectedDataset,
-        split: selectedSplit,
-        channel: selectedChannel,
-        window_size: 100,
-        stride: 10,
-        speed_delay_ms: replaySpeedMs,
-      });
-      setReplayStatus(initialStatus);
-      setApiStatus("connected");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to start historical replay";
-      setReplayError(msg);
-      console.error(msg);
-    }
-  }, [selectedDataset, selectedSplit, selectedChannel, replaySpeedMs]);
+  const startHistoricalReplay = useCallback(
+    async (startWindow?: number, pauseOnAnom: boolean = false) => {
+      try {
+        setReplayError(null);
+        setBackendWindow(null);
+        setLatestBackendResponse(null);
+        const initialStatus = await startReplay({
+          dataset: selectedDataset,
+          split: selectedSplit,
+          channel: selectedChannel,
+          window_size: 100,
+          stride: 10,
+          speed_delay_ms: replaySpeedMs,
+          start_window: startWindow,
+          pause_on_anomaly: pauseOnAnom,
+        });
+        setReplayStatus(initialStatus);
+        setApiStatus("connected");
+
+        if (initialStatus.latest_analysis && initialStatus.latest_window) {
+          const mapped = mapReplayStatusToWindow(initialStatus, simulatedWindow);
+          if (mapped) {
+            setBackendWindow(mapped);
+            setWindowIndex(initialStatus.current_window_index);
+          }
+        }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Failed to start historical replay";
+        setReplayError(msg);
+        console.error(msg);
+      }
+    },
+    [selectedDataset, selectedSplit, selectedChannel, replaySpeedMs, simulatedWindow]
+  );
 
   // Pause Historical Replay
   const pauseHistoricalReplay = useCallback(async () => {
@@ -670,9 +709,9 @@ export function TelemetryProvider({ children }: { children: ReactNode }) {
         replaySpeedMs,
         isReplaying,
         replayError,
-        setSelectedDataset,
-        setSelectedSplit,
-        setSelectedChannel,
+        setSelectedDataset: handleSelectDataset,
+        setSelectedSplit: handleSelectSplit,
+        setSelectedChannel: handleSelectChannel,
         setReplaySpeedMs,
         startHistoricalReplay,
         pauseHistoricalReplay,
