@@ -52,7 +52,7 @@ DEFAULT_TIMEOUT_SECONDS = 15.0
 
 def get_openai_config() -> dict[str, Any]:
     """
-    Read OpenAI configuration safely from project-root .env and system environment.
+    Read LLM configuration (Groq or OpenAI) safely from project-root .env and system environment.
     Credentials remain strictly backend-only.
     """
     # Load from root .env if present
@@ -62,14 +62,34 @@ def get_openai_config() -> dict[str, Any]:
     else:
         load_dotenv(override=True)
 
-    api_key = os.getenv("OPENAI_API_KEY", "").strip() or None
-    model = os.getenv("OPENAI_MODEL", DEFAULT_OPENAI_MODEL).strip()
+    llm_provider = os.getenv("LLM_PROVIDER", "").lower().strip()
+    groq_key = os.getenv("GROQ_API_KEY", "").strip() or None
+    openai_key = os.getenv("OPENAI_API_KEY", "").strip() or None
+
+    # Priority logic:
+    # 1. If LLM_PROVIDER is explicitly set, obey it
+    # 2. If GROQ_API_KEY is present, default to Groq (free fast API)
+    # 3. Otherwise fall back to standard OpenAI
+    if llm_provider == "groq" or (groq_key and llm_provider != "openai"):
+        provider = "groq"
+        api_key = groq_key
+        base_url = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1").strip()
+        default_model = "llama-3.3-70b-versatile"
+        model = os.getenv("GROQ_MODEL", default_model).strip()
+    else:
+        provider = "openai"
+        api_key = openai_key
+        base_url = os.getenv("OPENAI_BASE_URL", "").strip() or None
+        model = os.getenv("OPENAI_MODEL", DEFAULT_OPENAI_MODEL).strip()
+
     timeout = float(os.getenv("OPENAI_TIMEOUT_SECONDS", str(DEFAULT_TIMEOUT_SECONDS)))
     temperature = float(os.getenv("OPENAI_TEMPERATURE", "0.0"))
     max_retries = int(os.getenv("OPENAI_MAX_RETRIES", "2"))
 
     return {
+        "provider": provider,
         "api_key": api_key,
+        "base_url": base_url,
         "model": model,
         "timeout": timeout,
         "temperature": temperature,
@@ -168,12 +188,14 @@ def openai_generate_explanation(
     prompt_version: str = DEFAULT_PROMPT_VERSION,
     llm_model: str = DEFAULT_OPENAI_MODEL,
     api_key: str | None = None,
+    base_url: str | None = None,
+    provider: str = "openai",
     timeout: float = DEFAULT_TIMEOUT_SECONDS,
     temperature: float = 0.0,
     max_retries: int = 2,
 ) -> tuple[Explanation, ReasonerExecutionMetadata]:
     """
-    Invoke OpenAI with structured outputs enforcing strict evidence grounding.
+    Invoke OpenAI or Groq with structured outputs enforcing strict evidence grounding.
     """
     if OpenAI is None:
         raise RuntimeError("OpenAI SDK is not installed or available.")
@@ -181,6 +203,7 @@ def openai_generate_explanation(
     start_time = time.perf_counter()
     client = OpenAI(
         api_key=api_key,
+        base_url=base_url,
         timeout=timeout,
         max_retries=max_retries,
     )
@@ -202,20 +225,59 @@ def openai_generate_explanation(
         "Provide factual supporting evidence and actionable operational recommendations."
     )
 
-    completion = client.beta.chat.completions.parse(
-        model=llm_model,
-        messages=[
-            {"role": "system", "content": system_instruction},
-            {"role": "user", "content": prompt_content},
-        ],
-        response_format=ReasonerOutputSchema,
-        temperature=temperature,
-    )
+    parsed: ReasonerOutputSchema | None = None
+    response_id: str | None = None
+    token_usage = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
+
+    # Groq or custom base URL uses JSON Object Mode for maximum model compatibility
+    if provider == "groq" or (base_url and "groq" in base_url):
+        schema_dict = ReasonerOutputSchema.model_json_schema()
+        json_instruction = (
+            f"{system_instruction}\n"
+            f"You MUST output valid JSON strictly conforming to this schema:\n"
+            f"{json.dumps(schema_dict)}"
+        )
+        raw_completion = client.chat.completions.create(
+            model=llm_model,
+            messages=[
+                {"role": "system", "content": json_instruction},
+                {"role": "user", "content": prompt_content},
+            ],
+            response_format={"type": "json_object"},
+            temperature=temperature,
+        )
+        content_str = raw_completion.choices[0].message.content or "{}"
+        parsed = ReasonerOutputSchema.model_validate_json(content_str)
+        response_id = getattr(raw_completion, "id", None)
+        if getattr(raw_completion, "usage", None):
+            token_usage = {
+                "input_tokens": raw_completion.usage.prompt_tokens,
+                "output_tokens": raw_completion.usage.completion_tokens,
+                "total_tokens": raw_completion.usage.total_tokens,
+            }
+    else:
+        # OpenAI standard beta parse structured output
+        completion = client.beta.chat.completions.parse(
+            model=llm_model,
+            messages=[
+                {"role": "system", "content": system_instruction},
+                {"role": "user", "content": prompt_content},
+            ],
+            response_format=ReasonerOutputSchema,
+            temperature=temperature,
+        )
+        parsed = completion.choices[0].message.parsed  # type: ignore[assignment]
+        response_id = getattr(completion, "id", None)
+        if getattr(completion, "usage", None):
+            token_usage = {
+                "input_tokens": completion.usage.prompt_tokens,
+                "output_tokens": completion.usage.completion_tokens,
+                "total_tokens": completion.usage.total_tokens,
+            }
 
     latency_ms = (time.perf_counter() - start_time) * 1000.0
-    parsed: ReasonerOutputSchema = completion.choices[0].message.parsed  # type: ignore[assignment]
     if parsed is None:
-        raise ValueError("OpenAI structured output parsing returned None.")
+        raise ValueError("Structured output parsing returned None.")
 
     # Guardrail: strict grounding enforcement on severity and channels
     severity_val = parsed.cited_severity.lower().strip()
@@ -252,17 +314,11 @@ def openai_generate_explanation(
         created_at=utc_now(),
     )
 
-    token_usage = {
-        "input_tokens": completion.usage.prompt_tokens if completion.usage else 0,
-        "output_tokens": completion.usage.completion_tokens if completion.usage else 0,
-        "total_tokens": completion.usage.total_tokens if completion.usage else 0,
-    }
-
     metadata = ReasonerExecutionMetadata(
-        provider="openai",
+        provider=provider,
         model=llm_model,
         prompt_version=prompt_version,
-        response_id=completion.id,
+        response_id=response_id,
         latency_ms=round(latency_ms, 2),
         token_usage=token_usage,
         is_fallback=False,
@@ -323,9 +379,21 @@ def generate_explanation_with_metadata(
         )
         return expl, meta
 
+    active_provider = config.get("provider", "openai")
+    base_url = config.get("base_url")
+
+    # If caller explicitly provided an api_key (e.g. In unit tests), align provider with model
+    if api_key is not None:
+        if "llama" in model_name.lower() or "groq" in model_name.lower():
+            active_provider = "groq"
+            base_url = "https://api.groq.com/openai/v1"
+        else:
+            active_provider = "openai"
+            base_url = None
+
     # If no API key configured, cleanly activate deterministic fallback
     if not active_key:
-        logger.info("OPENAI_API_KEY not configured. Falling back to deterministic reasoner.")
+        logger.info(f"{active_provider.upper()}_API_KEY not configured. Falling back to deterministic reasoner.")
         start_time = time.perf_counter()
         expl = mock_generate_explanation(
             decision=decision,
@@ -343,7 +411,7 @@ def generate_explanation_with_metadata(
             latency_ms=round(latency_ms, 2),
             token_usage={"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
             is_fallback=True,
-            fallback_reason="OPENAI_API_KEY not configured in .env",
+            fallback_reason=f"{active_provider.upper()}_API_KEY not configured in .env",
             summary=expl.text,
             supporting_evidence=[
                 f"Specialist '{op.subsystem.value}' score {op.anomaly_score:.2f} under rule '{decision.fusion_rule_applied}'"
@@ -357,20 +425,22 @@ def generate_explanation_with_metadata(
         )
         return expl, meta
 
-    # Live OpenAI API invocation with structured exception handling
+    # Live API invocation with structured exception handling
     try:
         return openai_generate_explanation(
             decision=decision,
             prompt_version=prompt_version,
             llm_model=model_name,
             api_key=active_key,
+            base_url=base_url,
+            provider=active_provider,
             timeout=config["timeout"],
             temperature=config["temperature"],
             max_retries=config["max_retries"],
         )
     except Exception as e:
         logger.warning(
-            f"OpenAI reasoner call failed ({type(e).__name__}: {e}). Engaging deterministic fallback."
+            f"{active_provider.capitalize()} reasoner call failed ({type(e).__name__}: {e}). Engaging deterministic fallback."
         )
         start_time = time.perf_counter()
         expl = mock_generate_explanation(

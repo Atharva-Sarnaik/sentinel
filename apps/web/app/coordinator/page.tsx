@@ -427,7 +427,7 @@ export default function CoordinatorFusionPage() {
               />
               {currentWindow.fusionDecision.isFallback
                 ? `FALLBACK REASONER (${currentWindow.fusionDecision.reasonerModel || "mock"})`
-                : `OPENAI REASONER (${currentWindow.fusionDecision.reasonerModel || "gpt-4o-mini"})`}
+                : `${(currentWindow.fusionDecision.reasonerProvider || "AI").toUpperCase()} REASONER (${currentWindow.fusionDecision.reasonerModel || "gpt-4o-mini"})`}
             </span>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-low text-on-tertiary-container font-label-caps text-label-caps font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>

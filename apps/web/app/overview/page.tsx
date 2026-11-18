@@ -884,7 +884,11 @@ export default function OverviewPage() {
           <div className="pt-2 mt-2 border-t border-surface-container flex items-center justify-between text-outline font-label-caps text-[10px]">
             <span className="flex items-center gap-1.5">
               <span className={`w-1.5 h-1.5 rounded-full ${currentWindow.fusionDecision.isFallback ? "bg-amber-400" : "bg-emerald-400"}`} />
-              <span>{currentWindow.fusionDecision.isFallback ? "REASONER: FALLBACK" : "REASONER: OPENAI"}</span>
+              <span>
+                {currentWindow.fusionDecision.isFallback
+                  ? "REASONER: FALLBACK"
+                  : `REASONER: ${(currentWindow.fusionDecision.reasonerProvider || "AI").toUpperCase()}`}
+              </span>
             </span>
             <span className="text-on-surface font-mono text-[10px]">{currentWindow.fusionDecision.reasonerModel || "gpt-4o-mini"}</span>
           </div>
