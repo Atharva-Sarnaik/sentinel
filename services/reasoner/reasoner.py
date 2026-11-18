@@ -425,6 +425,43 @@ def generate_explanation_with_metadata(
         )
         return expl, meta
 
+    # Adaptive LLM reasoning (ADR-0002 cost & latency optimization):
+    # If telemetry health is NOMINAL, bypass the LLM network call and return an instant
+    # deterministic synthesis. If ANOMALOUS, invoke the LLM for deep root-cause reasoning.
+    adaptive_mode = os.getenv("LLM_ADAPTIVE_MODE", "true").lower().strip() in ("true", "1", "yes")
+    force_llm = os.getenv("FORCE_LLM_ON_NOMINAL", "false").lower().strip() in ("true", "1", "yes")
+
+    if adaptive_mode and not force_llm and decision.severity == Severity.NOMINAL:
+        start_time = time.perf_counter()
+        expl = mock_generate_explanation(
+            decision=decision,
+            prompt_version=prompt_version,
+            llm_model=f"{model_name}",
+            inject_hallucination=False,
+        )
+        latency_ms = (time.perf_counter() - start_time) * 1000.0
+
+        meta = ReasonerExecutionMetadata(
+            provider=active_provider,
+            model=f"{model_name} (adaptive)",
+            prompt_version=prompt_version,
+            response_id=None,
+            latency_ms=round(latency_ms, 2),
+            token_usage={"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+            is_fallback=False,
+            fallback_reason=None,
+            summary=expl.text,
+            supporting_evidence=[
+                f"Specialist '{op.subsystem.value}' anomaly score: {op.anomaly_score:.2f} (threshold: {op.threshold_used:.2f})"
+                for op in decision.opinions
+            ],
+            recommendations=[
+                "Maintain standard telemetry monitoring corridor.",
+                "Spacecraft systems in steady orbital equilibrium.",
+            ],
+        )
+        return expl, meta
+
     # Live API invocation with structured exception handling
     try:
         return openai_generate_explanation(
