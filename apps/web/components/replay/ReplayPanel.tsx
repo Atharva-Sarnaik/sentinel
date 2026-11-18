@@ -299,7 +299,52 @@ export function ReplayPanel() {
             </div>
             <div>
               <span className="text-outline block text-[9px] uppercase font-sans">AI Reasoner Model</span>
-              <span className="text-on-surface font-semibold">mock-reasoner (v1.0.0)</span>
+              {(() => {
+                const isFb = Boolean(
+                  (replayStatus?.latest_analysis?.audit_entry?.extra?.reasoner as Record<string, unknown>)?.is_fallback ??
+                    replayStatus?.latest_analysis?.audit_entry?.extra?.is_fallback ??
+                    currentWindow.fusionDecision.isFallback
+                );
+                const rModel =
+                  ((replayStatus?.latest_analysis?.audit_entry?.extra?.reasoner as Record<string, unknown>)?.model as string) ||
+                  (replayStatus?.latest_analysis?.audit_entry?.extra?.model as string) ||
+                  replayStatus?.latest_analysis?.explanation?.llm_model ||
+                  currentWindow.fusionDecision.reasonerModel ||
+                  "gpt-4o-mini";
+                const fbReason =
+                  ((replayStatus?.latest_analysis?.audit_entry?.extra?.reasoner as Record<string, unknown>)?.fallback_reason as string) ||
+                  (replayStatus?.latest_analysis?.audit_entry?.extra?.fallback_reason as string) ||
+                  currentWindow.fusionDecision.fallbackReason;
+
+                return (
+                  <div className="flex flex-col gap-0.5">
+                    <span
+                      className={`inline-flex items-center gap-1.5 font-semibold text-[11px] ${
+                        isFb ? "text-amber-400" : "text-emerald-400"
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          isFb ? "bg-amber-400" : "bg-emerald-400"
+                        }`}
+                      />
+                      {isFb ? `FALLBACK (${rModel})` : `OPENAI (${rModel})`}
+                    </span>
+                    {isFb && fbReason && (
+                      <span
+                        className="text-[9px] text-amber-300/80 truncate max-w-[190px]"
+                        title={fbReason}
+                      >
+                        {fbReason.includes("429")
+                          ? "API Quota Exceeded (429)"
+                          : fbReason.includes("401")
+                          ? "API Key Invalid (401)"
+                          : "Fallback Safe-State Active"}
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           </div>
 

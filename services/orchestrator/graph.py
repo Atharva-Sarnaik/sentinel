@@ -309,7 +309,7 @@ def run_pipeline(
     window_dict: dict[str, Any],
     run_id: str = "sentinel-run-001",
     audit_db_url: str = DEFAULT_AUDIT_DB,
-    llm_model: str = "mock-reasoner",
+    llm_model: str | None = None,
 ) -> dict[str, Any]:
     """
     Run the full compiled pipeline on a serialised or deserialised TelemetryWindow.

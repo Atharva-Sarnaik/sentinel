@@ -56,9 +56,11 @@ def get_openai_config() -> dict[str, Any]:
     Credentials remain strictly backend-only.
     """
     # Load from root .env if present
-    root_env = Path(".env")
+    root_env = Path(__file__).resolve().parent.parent.parent / ".env"
     if root_env.is_file():
-        load_dotenv(dotenv_path=root_env, override=False)
+        load_dotenv(dotenv_path=root_env, override=True)
+    else:
+        load_dotenv(override=True)
 
     api_key = os.getenv("OPENAI_API_KEY", "").strip() or None
     model = os.getenv("OPENAI_MODEL", DEFAULT_OPENAI_MODEL).strip()
@@ -285,7 +287,7 @@ def generate_explanation_with_metadata(
     and comprehensive execution metadata.
     """
     config = get_openai_config()
-    active_key = api_key or config["api_key"]
+    active_key = api_key if api_key is not None else config["api_key"]
     model_name = llm_model or config["model"]
 
     # Explicit offline mock requested
