@@ -46,7 +46,11 @@ from libs.contracts import (
 from services.audit.log_writer import DEFAULT_AUDIT_DB, write_audit_entry
 from services.fusion.engine import fuse
 from services.observability.tracing import trace_llm_call
-from services.reasoner.reasoner import DEFAULT_PROMPT_VERSION, generate_explanation
+from services.reasoner.reasoner import (
+    DEFAULT_PROMPT_VERSION,
+    generate_explanation,
+    generate_explanation_with_metadata,
+)
 from services.verifier.grounding import check_grounding
 from services.verifier.retry import MAX_RETRIES
 
@@ -66,6 +70,7 @@ class PipelineState(TypedDict, total=False):
     audit_db_url: str
     llm_model: str
     prompt_version: str
+    reasoner_metadata: dict[str, Any]
 
 
 def specialists_node(state: PipelineState) -> dict[str, Any]:
@@ -124,30 +129,33 @@ def fusion_node(state: PipelineState) -> dict[str, Any]:
 def reasoner_node(state: PipelineState) -> dict[str, Any]:
     """Generate structured natural-language explanation using LLM reasoner."""
     decision = state["decision"]
-    llm_model = state.get("llm_model", "mock-reasoner")
+    llm_model = state.get("llm_model")
     prompt_version = state.get("prompt_version", DEFAULT_PROMPT_VERSION)
     run_id = state.get("run_id", "sentinel-run-001")
 
-    start_time = time.perf_counter()
-    explanation = generate_explanation(
+    explanation, meta = generate_explanation_with_metadata(
         decision=decision,
         prompt_version=prompt_version,
         llm_model=llm_model,
     )
-    latency_ms = (time.perf_counter() - start_time) * 1000.0
 
-    # Trace LLM call
+    # Trace LLM call with structured metrics
     trace_llm_call(
         run_id=run_id,
         prompt_version=prompt_version,
-        llm_model=llm_model,
-        input_tokens=150,
-        output_tokens=60,
-        latency_ms=latency_ms,
-        metadata={"decision_id": str(decision.decision_id)},
+        llm_model=meta.model,
+        input_tokens=meta.token_usage.get("input_tokens", 0),
+        output_tokens=meta.token_usage.get("output_tokens", 0),
+        latency_ms=meta.latency_ms,
+        metadata={
+            "decision_id": str(decision.decision_id),
+            "provider": meta.provider,
+            "is_fallback": meta.is_fallback,
+            "response_id": meta.response_id,
+        },
     )
 
-    return {"explanation": explanation}
+    return {"explanation": explanation, "reasoner_metadata": meta.model_dump()}
 
 
 def verifier_node(state: PipelineState) -> dict[str, Any]:
@@ -214,6 +222,28 @@ def audit_node(state: PipelineState) -> dict[str, Any]:
     window = state["window"]
     run_id = state.get("run_id", "sentinel-run-default")
     db_url = state.get("audit_db_url", DEFAULT_AUDIT_DB)
+    reasoner_meta = state.get("reasoner_metadata", {})
+
+    extra_data = {
+        "fusion_rule_applied": decision.fusion_rule_applied,
+        "attributed_subsystem": str(decision.attributed_subsystem)
+        if decision.attributed_subsystem
+        else None,
+        "provider": reasoner_meta.get("provider", "mock-reasoner"),
+        "model": reasoner_meta.get("model", state.get("llm_model", "mock-reasoner")),
+        "prompt_version": reasoner_meta.get("prompt_version", state.get("prompt_version", "v1.0.0")),
+        "response_id": reasoner_meta.get("response_id"),
+        "latency_ms": reasoner_meta.get("latency_ms", 0.0),
+        "token_usage": reasoner_meta.get("token_usage", {}),
+        "is_fallback": reasoner_meta.get("is_fallback", False),
+        "fallback_reason": reasoner_meta.get("fallback_reason"),
+        "summary": reasoner_meta.get("summary", ""),
+        "supporting_evidence": reasoner_meta.get("supporting_evidence", []),
+        "recommendations": reasoner_meta.get("recommendations", []),
+        "verifier_status": verifier_res.status.value,
+        "ungrounded_claims": verifier_res.ungrounded_claims,
+        "reasoner": reasoner_meta,
+    }
 
     entry = AuditEntry(
         run_id=run_id,
@@ -223,12 +253,7 @@ def audit_node(state: PipelineState) -> dict[str, Any]:
         final_severity=decision.severity,
         abstained=state.get("abstained", False),
         created_at=utc_now(),
-        extra={
-            "fusion_rule_applied": decision.fusion_rule_applied,
-            "attributed_subsystem": str(decision.attributed_subsystem)
-            if decision.attributed_subsystem
-            else None,
-        },
+        extra=extra_data,
     )
 
     write_audit_entry(entry, db_url=db_url)
@@ -328,4 +353,5 @@ def run_pipeline(
         "verifier_result": final_state.get("verifier_result"),
         "audit_entry": final_state.get("audit_entry"),
         "abstained": final_state.get("abstained", False),
+        "reasoner_metadata": final_state.get("reasoner_metadata"),
     }

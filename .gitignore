@@ -90,6 +90,13 @@ docs/PROJECT_EXPLANATION_FOR_GUIDE.md
 # ── Docker ───────────────────────────────────────────────────
 *.dockerignore
 
-# ── Node (Streamlit assets, if any) ──────────────────────────
+# ── Node / Web (Next.js) ────────────────────────────────────
 node_modules/
+apps/web/node_modules/
+.next/
+apps/web/.next/
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
 

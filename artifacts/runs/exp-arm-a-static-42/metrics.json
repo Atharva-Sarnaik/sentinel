@@ -6,10 +6,13 @@
   "precision": 1.0,
   "recall": 1.0,
   "f1": 1.0,
-  "f1_score": 1.0,
   "false_positive_rate": 0.0,
-  "fpr": 0.0,
-  "execution_time_sec": 0.017,
+  "execution_time_sec": 0.0279,
   "model_run_id": "exp-arm-a-static-42",
-  "arm": "A (Static Threshold)"
+  "arm": "A (Static Threshold)",
+  "event_precision": 1.0,
+  "event_recall": 1.0,
+  "event_f1": 1.0,
+  "detection_latency": 0.0,
+  "point_adjusted_f1": 1.0
 }

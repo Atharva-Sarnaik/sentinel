@@ -62,39 +62,39 @@ Full task list with IDs, owners, branch names, and done-when criteria.
 
 ---
 
-## Tier 4: Evaluation and Ablation (weeks 18–20)
+## Tier 4: Evaluation and Ablation (weeks 18–20) — COMPLETED ✅
 
-| ID | Task | Owner | Branch | Done when |
+| ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| T4.1 | Event-wise metrics, latency, attribution accuracy | A | `feat/T4.1-eval-metrics` | Metrics unit-tested on synthetic cases |
-| T4.2 | Ablation harness (arms A–E) | A | `feat/T4.2-ablation-harness` | One command runs all arms on identical windows |
-| T4.3 | Golden set for explanation grounding | S | `feat/T4.3-golden-set` | Labelled set committed |
-| T4.4 | Run experiments, results tables | S | `feat/T4.4-experiments` | Tables with run IDs and raw metrics |
-| T4.5 | H1–H5 verdicts, negative results included | A | `docs/T4.5-hypotheses-verdicts` | `docs/HYPOTHESES.md` updated from real runs |
+| T4.1 | Event-wise metrics, latency, attribution accuracy | A | Done | Metrics unit-tested on synthetic cases |
+| T4.2 | Ablation harness (arms A–E) | A | Done | One command runs all arms on identical windows |
+| T4.3 | Golden set for explanation grounding | S | Done | Labelled set committed |
+| T4.4 | Run experiments, results tables | S | Done | Tables with run IDs and raw metrics |
+| T4.5 | H1–H5 verdicts, negative results included | A | Done | `docs/HYPOTHESES.md` updated from real runs |
 
 ---
 
-## Tier 5: Interfaces (weeks 21–22)
+## Tier 5: Interfaces (weeks 21–22) — COMPLETED ✅
 
-| ID | Task | Owner | Branch | Done when |
+| ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| T5.1 | CLI commands (`analyze`, `evaluate`, `report`) | A | `feat/T5.1-cli-commands` | Documented with examples |
-| T5.2 | FastAPI service | S | `feat/T5.2-fastapi` | Typed endpoints, tests |
-| T5.3 | HTML/JSON report export | S | `feat/T5.3-report-export` | `analyze --report html` works |
-| T5.4 | CLI polish and one-command demo script | A | `feat/T5.4-cli-polish` | Demo runs from a clean clone |
+| T5.1 | CLI commands (`analyze`, `evaluate`, `report`) | A | Done | Documented with examples |
+| T5.2 | FastAPI service | S | Done | Typed endpoints, tests |
+| T5.3 | HTML/JSON report export | S | Done | `analyze --report html` works |
+| T5.4 | CLI polish and one-command demo script | A | Done | Demo runs from a clean clone |
 
 ---
 
-## Tier 6: Extended Objectives (weeks 23–26)
+## Tier 6: Extended Objectives (weeks 23–26) — COMPLETED ✅
 
 > Only if Tier 4 results exist.
 
-| ID | Task | Owner | Branch | Done when |
+| ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| T6.1 | Streamlit replay dashboard | S | `feat/T6.1-streamlit-dashboard` | Four subsystem panels plus coordinator panel |
-| T6.2 | Learned stacking coordinator with calibration | A | `feat/T6.2-stacking-coordinator` | Compared against rule-based fusion |
-| T6.3 | QLoRA fine-tune of a small explanation model | A | `feat/T6.3-qlora-finetune` | Quality, latency and cost compared with the API model |
-| T6.4 | Docker Compose packaging | S | `feat/T6.4-docker-compose` | One command brings up the stack |
+| T6.1 | Streamlit replay dashboard | S | Done | Four subsystem panels plus coordinator panel |
+| T6.2 | Learned stacking coordinator with calibration | A | Done | Compared against rule-based fusion |
+| T6.3 | QLoRA fine-tune of a small explanation model | A | Done | Quality, latency and cost compared with the API model |
+| T6.4 | Docker Compose packaging | S | Done | One command brings up the stack |
 
 ---
 

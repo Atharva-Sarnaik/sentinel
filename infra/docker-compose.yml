@@ -1,37 +1,46 @@
 version: "3.9"
 
 # Docker Compose for the Sentinel stack (Tier 6, task T6.4)
-# Status: scaffold placeholder — not yet implemented.
+# One command brings up the full stack: api, dashboard, and mlflow.
 
 services:
   api:
     build:
-      context: .
+      context: ..
       dockerfile: infra/Dockerfile.api
+    container_name: sentinel-api
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=sqlite:///audit.db
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
     volumes:
-      - ./data:/app/data
-    # TODO (T6.4): implement full service definition
+      - ../data:/app/data
+      - ../audit.db:/app/audit.db
+    restart: unless-stopped
 
   dashboard:
     build:
-      context: .
+      context: ..
       dockerfile: infra/Dockerfile.dashboard
+    container_name: sentinel-dashboard
     ports:
       - "8501:8501"
+    environment:
+      - SENTINEL_API_URL=http://api:8000
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    volumes:
+      - ../data:/app/data
     depends_on:
       - api
-    # TODO (T6.4): implement dashboard service
+    restart: unless-stopped
 
   mlflow:
     image: ghcr.io/mlflow/mlflow:latest
+    container_name: sentinel-mlflow
     ports:
       - "5000:5000"
     volumes:
-      - ./mlruns:/mlflow/mlruns
-    command: mlflow server --host 0.0.0.0 --port 5000
-    # TODO (T6.4): configure backend store and artifact root
-
+      - ../mlruns:/mlflow/mlruns
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:////mlflow/mlruns/mlflow.db --default-artifact-root /mlflow/mlruns
+    restart: unless-stopped

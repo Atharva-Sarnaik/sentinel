@@ -1,7 +1,7 @@
 {
   "model_run_id": "exp-arm-d-specialists-42",
   "arm": "D (Specialists alone)",
-  "execution_time_sec": 1.7202,
+  "execution_time_sec": 3.8248,
   "subsystems": {
     "attitude": {
       "subsystem": "attitude",

@@ -1,10 +1,10 @@
 {
   "artifact_dir": null,
   "config_hash": "2eed7c46dd4f0047334d89a6fd1730973622635758806d7d7224f89df7cf7359",
-  "created_at": "2026-11-14T19:47:38.481929Z",
+  "created_at": "2026-11-16T10:17:31.721225Z",
   "dataset_dvc_hash": "05435ac72338b8aeaf1e46c2d7d3637cb9c341b191bfcbf212f5c0d2b775f32a",
   "description": "Arm A Static Threshold Baseline evaluation run",
-  "git_commit": "4d316270f9790ca49bd8b3d0006fc6208b451960",
+  "git_commit": "d5ea6967530dbdfdae71cdfb7f494f9557022fca",
   "mlflow_experiment_id": "offline",
   "mlflow_run_ids": {},
   "run_id": "exp-arm-a-static-42"

@@ -5,8 +5,8 @@ Unit tests for Task T4.4 experiment execution and results generation.
 
 Owner:   Sujal Hede (@Sujalhede)
 Tier:    4 (task T4.4)
-Status:  complete — validates reproducible experiment runs, manifest persistence,
-         metrics computation, and results documentation.
+Status:  complete — validates reproducible experiment runs across all 5 arms,
+         manifest persistence, metrics computation, and results documentation.
 """
 
 from __future__ import annotations
@@ -148,7 +148,7 @@ def test_classification_metrics_zero_division() -> None:
 
 
 def test_experiment_runs_and_manifest_storage() -> None:
-    """Verify that run_all_experiments executes arms and persists valid RunManifests."""
+    """Verify that run_all_experiments executes all 5 arms and persists valid RunManifests."""
     with tempfile.TemporaryDirectory() as tmp_dir:
         results = run_all_experiments(seed=99, output_runs_dir=tmp_dir)
 
@@ -159,23 +159,22 @@ def test_experiment_runs_and_manifest_storage() -> None:
         assert "Arm_E" in results
         assert "T4.3_Golden_Set" in results
 
-        # Verify Arm E has no fake model_run_id and is flagged with blockers
-        assert results["Arm_E"]["model_run_id"] == "N/A"
-        assert results["Arm_E"]["status"] == "BLOCKED_PENDING_TIER_3"
-        assert len(results["Arm_E"]["blockers"]) >= 4
+        # Verify Arm E executed and has a valid model_run_id
+        assert results["Arm_E"]["model_run_id"] == "exp-arm-e-sentinel-99"
+        assert results["Arm_E"]["status"] == "EXECUTED"
+        assert "event_f1" in results["Arm_E"]
 
-        # Verify manifest persistence only for Arms A, B, C, D (Arm E not persisted)
+        # Verify manifest persistence for all 5 arms: Arms A, B, C, D, E
         store = ManifestStore(root_dir=tmp_dir)
         all_manifests = store.list_all()
-        assert len(all_manifests) == 4  # Arms A, B, C, D
+        assert len(all_manifests) == 5
 
         run_ids = {m.run_id for m in all_manifests}
         assert "exp-arm-a-static-99" in run_ids
         assert "exp-arm-b-iforest-99" in run_ids
         assert "exp-arm-c-combined-lstm-ae-99" in run_ids
         assert "exp-arm-d-specialists-99" in run_ids
-        # Confirm no Arm E manifest exists
-        assert not any("arm-e" in r.lower() for r in run_ids)
+        assert "exp-arm-e-sentinel-99" in run_ids
 
         for manifest in all_manifests:
             assert isinstance(manifest, RunManifest)
@@ -198,13 +197,12 @@ def test_markdown_report_generation() -> None:
 
         # Verify required sections
         assert "Comparative Results Across Experimental Arms" in content
+        assert "Headline Event-Wise Metrics" in content
         assert "Results Interpretation & Architectural Analysis" in content
         assert "Arm D: Per-Subsystem Specialist Performance" in content
         assert "T4.3 Explanation Grounding Benchmark Status" in content
-        assert "Documented Blockers and Limitations" in content
         assert "Reproduction Commands" in content
         assert "Synthetic-Standard-Verification" in content
         assert "51 minutes" in content
         assert "exp-arm-a-static-42" in content
-        # Confirm Arm E has N/A run ID
-        assert "| **Arm E (Full Coordinated)** | N/A |" in content
+        assert "exp-arm-e-sentinel-42" in content

@@ -577,7 +577,7 @@ def test_run_ablation_arm_e_default_orchestrator_blocked(
     """Verify Arm E dynamically invokes default orchestrator and catches NotImplementedError."""
 
     def mock_not_implemented(*args: Any, **kwargs: Any) -> Any:
-        raise NotImplementedError("run_pipeline: pending")
+        raise NotImplementedError("run_pipeline: implementation pending task T3.1.")
 
     monkeypatch.setattr("services.orchestrator.graph.run_pipeline", mock_not_implemented)
     windows = [_make_dummy_window(0)]
@@ -589,6 +589,18 @@ def test_run_ablation_arm_e_default_orchestrator_blocked(
     assert "run_pipeline" in arm_e["blocker"]
     assert any("services.orchestrator.graph" in b for b in arm_e["blockers"])
     assert "predictions" not in arm_e
+
+
+def test_run_ablation_arm_e_real_orchestrator_execution() -> None:
+    """Verify Arm E executes the real default orchestrator pipeline implemented in Tier 3."""
+    windows = [_make_dummy_window(0)]
+    results = run_ablation(windows=windows, arms=("E",))
+
+    assert "E" in results
+    arm_e = results["E"]
+    assert arm_e["status"] == "EXECUTED_DEFAULT_PIPELINE"
+    assert "predictions" in arm_e
+    assert len(arm_e["predictions"]) == 1
 
 
 def test_run_ablation_arm_e_default_orchestrator_operational_mock(

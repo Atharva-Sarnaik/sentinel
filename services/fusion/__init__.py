@@ -8,12 +8,22 @@ from services.fusion.corroboration import (
     load_corroboration_rules,
 )
 from services.fusion.engine import fuse
+from services.fusion.stacking import (
+    LearnedStackingCoordinator,
+    compare_stacking_vs_rules,
+    compute_expected_calibration_error,
+    extract_opinion_features,
+)
 
 __all__ = [
-    "fuse",
+    "CorroborationRule",
+    "LearnedStackingCoordinator",
+    "attribute_subsystem",
+    "compare_stacking_vs_rules",
+    "compute_expected_calibration_error",
     "evaluate_corroboration",
     "evaluate_corroboration_detailed",
+    "extract_opinion_features",
+    "fuse",
     "load_corroboration_rules",
-    "CorroborationRule",
-    "attribute_subsystem",
 ]

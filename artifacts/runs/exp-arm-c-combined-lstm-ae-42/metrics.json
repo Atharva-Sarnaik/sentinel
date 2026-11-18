@@ -7,8 +7,13 @@
   "recall": 1.0,
   "f1": 1.0,
   "false_positive_rate": 0.0,
-  "execution_time_sec": 3.3968,
+  "execution_time_sec": 8.1496,
   "model_run_id": "exp-arm-c-combined-lstm-ae-42",
   "arm": "C (Combined LSTM-AE)",
-  "threshold_used": 622.9903564453125
+  "threshold_used": 622.9903564453125,
+  "event_precision": 1.0,
+  "event_recall": 1.0,
+  "event_f1": 1.0,
+  "detection_latency": 0.0,
+  "point_adjusted_f1": 1.0
 }

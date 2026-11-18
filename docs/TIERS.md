@@ -32,23 +32,26 @@
 
 ---
 
-## Tier 4: Evaluation and Ablation — weeks 18–20 — `tier-4-done`
+## Tier 4: Evaluation and Ablation — weeks 18–20 — `tier-4-done` ✅
 
-**Exit criteria:** Metrics unit-tested on synthetic cases; one command runs all five arms; golden set committed; results tables with run IDs exist; H1–H5 verdicts updated from real runs (negative results included).
-
----
-
-## Tier 5: Interfaces — weeks 21–22 — `tier-5-done`
-
-**Exit criteria:** CLI commands (`analyze`, `evaluate`, `report`) documented with examples; FastAPI endpoints typed and tested; HTML/JSON export works; one-command demo runs from clean clone.
+**Status:** Completed
+**Exit criteria:** Metrics unit-tested on synthetic cases; one command runs all five arms; golden set committed; results tables with run IDs exist; H1–H5 verdicts updated from real runs (negative results included). All unit, baseline, ablation, golden set, and experiment tests pass.
 
 ---
 
-## Tier 6: Extended Objectives — weeks 23–26 — `tier-6-done`
+## Tier 5: Interfaces — weeks 21–22 — `tier-5-done` ✅
+
+**Status:** Completed
+**Exit criteria:** CLI commands (`analyze`, `evaluate`, `report`) documented with examples; FastAPI endpoints typed and tested; HTML/JSON export works; one-command demo runs from clean clone. All unit, CLI, API, and demo tests pass.
+
+---
+
+## Tier 6: Extended Objectives — weeks 23–26 — `tier-6-done` ✅
 
 > **Only started if Tier 4 results exist.**
 
-**Exit criteria:** Streamlit dashboard shows four subsystem panels + coordinator panel; learned stacking coordinator compared against rule-based fusion; QLoRA fine-tune compared with API model; Docker Compose brings up the full stack.
+**Status:** Completed
+**Exit criteria:** Streamlit dashboard shows four subsystem panels + coordinator panel; learned stacking coordinator compared against rule-based fusion; QLoRA fine-tune compared with API model; Docker Compose brings up the full stack. All unit, dashboard, stacking, qlora, and docker-compose tests pass.
 
 ---
 

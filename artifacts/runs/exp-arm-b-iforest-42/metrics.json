@@ -7,7 +7,12 @@
   "recall": 1.0,
   "f1": 0.5,
   "false_positive_rate": 1.0,
-  "execution_time_sec": 0.4856,
+  "execution_time_sec": 1.3551,
   "model_run_id": "exp-arm-b-iforest-42",
-  "arm": "B (Isolation Forest)"
+  "arm": "B (Isolation Forest)",
+  "event_precision": 1.0,
+  "event_recall": 1.0,
+  "event_f1": 1.0,
+  "detection_latency": 0.0,
+  "point_adjusted_f1": 0.5
 }

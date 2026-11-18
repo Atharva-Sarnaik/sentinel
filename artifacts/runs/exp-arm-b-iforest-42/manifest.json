@@ -1,10 +1,10 @@
 {
   "artifact_dir": null,
   "config_hash": "9e1581ec378a17a987dcd7cc2ffa84e3f2bdcc9c763e12ad7580b1e6e3087d21",
-  "created_at": "2026-11-14T19:47:39.024808Z",
+  "created_at": "2026-11-16T10:17:33.146578Z",
   "dataset_dvc_hash": "05435ac72338b8aeaf1e46c2d7d3637cb9c341b191bfcbf212f5c0d2b775f32a",
   "description": "Arm B Isolation Forest Baseline evaluation run",
-  "git_commit": "4d316270f9790ca49bd8b3d0006fc6208b451960",
+  "git_commit": "d5ea6967530dbdfdae71cdfb7f494f9557022fca",
   "mlflow_experiment_id": "offline",
   "mlflow_run_ids": {},
   "run_id": "exp-arm-b-iforest-42"

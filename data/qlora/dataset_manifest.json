@@ -1,0 +1,90 @@
+{
+  "manifest_version": "1.0",
+  "created_at": "2026-11-17T07:25:46.967614+00:00",
+  "target_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "splits": {
+    "train": {
+      "count": 320,
+      "base_decisions": 64,
+      "templates_per_decision": 5,
+      "seed": 101,
+      "start_time": "2024-02-01T00:00:00+00:00",
+      "file": "sentinel_train.jsonl",
+      "sha256": "952e3194dfdebf79da5eb6f8c4410f3d373bf6dfaa1d9eba9f0f68b56200dd8d",
+      "stats": {
+        "total": 320,
+        "nominal": 80,
+        "warning": 85,
+        "critical": 155,
+        "validation_passed": 320,
+        "validation_failed": 0
+      }
+    },
+    "validation": {
+      "count": 80,
+      "base_decisions": 16,
+      "templates_per_decision": 5,
+      "seed": 202,
+      "start_time": "2024-03-01T00:00:00+00:00",
+      "file": "sentinel_validation.jsonl",
+      "sha256": "cadb4fb7cffb89d35ec16ad533a10baf0f34c7a13a781db3e24933e8fbe6b5ce",
+      "stats": {
+        "total": 80,
+        "nominal": 20,
+        "warning": 20,
+        "critical": 40,
+        "validation_passed": 80,
+        "validation_failed": 0
+      }
+    },
+    "test": {
+      "count": 30,
+      "base_decisions": 30,
+      "templates_per_decision": 1,
+      "seed": 303,
+      "start_time": "2024-04-01T00:00:00+00:00",
+      "file": "sentinel_test.jsonl",
+      "sha256": "ce9c26d957366a0a563793e51c7b1c6d19b38083fadfdc77d2fdc1fc7ca06343",
+      "stats": {
+        "total": 30,
+        "nominal": 7,
+        "warning": 8,
+        "critical": 15,
+        "validation_passed": 30,
+        "validation_failed": 0
+      },
+      "positive_golden_benchmark_ids": [
+        "GOLDEN-GROUNDING-001",
+        "GOLDEN-GROUNDING-002",
+        "GOLDEN-GROUNDING-003",
+        "GOLDEN-GROUNDING-004"
+      ]
+    }
+  },
+  "generation_config": {
+    "canonical_channels": [
+      "P-1",
+      "P-2",
+      "P-3",
+      "P-4",
+      "T-1",
+      "T-2",
+      "T-3",
+      "A-1",
+      "A-2",
+      "A-3",
+      "A-4",
+      "C-1",
+      "C-2",
+      "D-1"
+    ],
+    "scale_factor": 1.75,
+    "window_length": 50,
+    "num_templates": 5
+  },
+  "validation_summary": {
+    "total_validated": 430,
+    "total_passed": 430,
+    "total_failed": 0
+  }
+}
