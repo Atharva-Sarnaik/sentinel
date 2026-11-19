@@ -167,6 +167,8 @@ class HistoricalReplayManager:
         self.start_window: int = 0
         self.pause_on_anomaly: bool = False
         self._currently_in_anomaly: bool = False
+        self._active_anomaly_explanation: dict[str, Any] | None = None
+        self._active_anomaly_metadata: dict[str, Any] | None = None
 
         self.current_window_index: int = 0
         self.total_windows: int = 0
@@ -287,6 +289,8 @@ class HistoricalReplayManager:
             self.recent_history.clear()
             self.error = None
             self._currently_in_anomaly = False
+            self._active_anomaly_explanation = None
+            self._active_anomaly_metadata = None
 
             self._stop_requested = False
             self._pause_event.set()
@@ -381,10 +385,19 @@ class HistoricalReplayManager:
         if self.status in ("running", "paused"):
             self.status = "stopped"
 
-    def _execute_pipeline_sync(self, window_dict: dict[str, Any]) -> dict[str, Any]:
+    def _execute_pipeline_sync(
+        self,
+        window_dict: dict[str, Any],
+        cached_explanation: Any = None,
+        cached_reasoner_meta: Any = None,
+    ) -> dict[str, Any]:
         """Execute Sentinel orchestrator pipeline synchronously."""
         orch = importlib.import_module("services.orchestrator.graph")
-        outcome = orch.run_pipeline(window_dict)
+        outcome = orch.run_pipeline(
+            window_dict,
+            cached_explanation=cached_explanation,
+            cached_reasoner_meta=cached_reasoner_meta,
+        )
         return _serialize_object(outcome)
 
     async def _run_loop(self, generator: Any, total_expected: int) -> None:
@@ -407,8 +420,19 @@ class HistoricalReplayManager:
 
                 window_dict = window.model_dump()
                 try:
+                    # High-Performance Replay Optimization:
+                    # If we are continuing through an existing anomaly event, pass the cached explanation
+                    # to prevent slow 2-second LLM network calls on every single consecutive window.
+                    cached_expl = self._active_anomaly_explanation if self._currently_in_anomaly else None
+                    cached_meta = self._active_anomaly_metadata if self._currently_in_anomaly else None
+
                     # Run the pipeline without blocking the asyncio event loop
-                    outcome = await asyncio.to_thread(self._execute_pipeline_sync, window_dict)
+                    outcome = await asyncio.to_thread(
+                        self._execute_pipeline_sync,
+                        window_dict,
+                        cached_expl,
+                        cached_meta,
+                    )
 
                     decision = outcome.get("decision", {})
                     audit_entry = outcome.get("audit_entry", {})
@@ -416,6 +440,7 @@ class HistoricalReplayManager:
 
                     primary_series = window.channels.get(self.channel, [])
                     is_anom = bool(window.metadata.get("is_anomalous", False))
+                    is_current_anom = is_anom or decision.get("severity", "nominal") != "nominal"
 
                     self.current_window_index = idx + 1
                     self.processed_windows += 1
@@ -452,10 +477,12 @@ class HistoricalReplayManager:
                     self.recent_history.append(history_entry)
 
                     # Edge-triggered auto-pause: pause ONCE upon entering a new anomaly event
-                    is_current_anom = is_anom or decision.get("severity", "nominal") != "nominal"
                     if is_current_anom:
                         if not self._currently_in_anomaly:
                             self._currently_in_anomaly = True
+                            self._active_anomaly_explanation = explanation
+                            self._active_anomaly_metadata = outcome.get("reasoner_metadata")
+
                             if getattr(self, "pause_on_anomaly", False):
                                 self.status = "paused"
                                 self._pause_event.clear()
@@ -464,6 +491,8 @@ class HistoricalReplayManager:
                                 )
                     else:
                         self._currently_in_anomaly = False
+                        self._active_anomaly_explanation = None
+                        self._active_anomaly_metadata = None
 
                 except Exception as e:
                     logger.error(f"Error processing replay window {idx}: {e}", exc_info=True)

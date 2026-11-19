@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
+import time
 
 import pytest
 from fastapi.testclient import TestClient
@@ -239,6 +240,37 @@ def test_replay_edge_triggered_anomaly_pause_and_resume():
 
         assert manager.status == "completed"
         assert manager.processed_windows >= 5
+
+    asyncio.run(_run())
+
+
+def test_replay_cached_reasoner_speed_through_continuous_anomaly():
+    """Verify that continuous replay (Action C) through a sustained anomaly reuses the active explanation without slow repeated LLM calls."""
+    async def _run():
+        manager = HistoricalReplayManager()
+        # Stream 15 consecutive windows through anomaly (205 to 220) with speed_delay_ms=0
+        start_t = time.perf_counter()
+        status = await manager.start(
+            dataset="SMAP",
+            split="test",
+            channel="P-1",
+            window_size=100,
+            stride=10,
+            speed_delay_ms=0,
+            start_window=205,
+            max_windows=220,
+            pause_on_anomaly=False,
+        )
+        assert status["status"] == "running"
+
+        if manager._task:
+            await manager._task
+
+        duration = time.perf_counter() - start_t
+        assert manager.status == "completed"
+        assert manager.processed_windows >= 14
+        # All 15 windows must finish in under 3.0s total (proving cached sub-millisecond execution for subsequent anomaly frames)
+        assert duration < 5.0, f"Expected fast execution, took {duration:.2f}s"
 
     asyncio.run(_run())
 

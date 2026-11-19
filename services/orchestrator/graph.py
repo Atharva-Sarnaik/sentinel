@@ -71,6 +71,8 @@ class PipelineState(TypedDict, total=False):
     llm_model: str
     prompt_version: str
     reasoner_metadata: dict[str, Any]
+    cached_explanation: Any
+    cached_reasoner_meta: dict[str, Any]
 
 
 def specialists_node(state: PipelineState) -> dict[str, Any]:
@@ -151,6 +153,44 @@ def reasoner_node(state: PipelineState) -> dict[str, Any]:
     llm_model = state.get("llm_model")
     prompt_version = state.get("prompt_version", DEFAULT_PROMPT_VERSION)
     run_id = state.get("run_id", "sentinel-run-001")
+
+    # Fast path: If an active anomaly explanation is cached for this ongoing event,
+    # link it with the current decision without slow external LLM network round-trips (<1ms).
+    cached_expl = state.get("cached_explanation")
+    if cached_expl is not None:
+        if isinstance(cached_expl, dict):
+            # Parse dict back to Explanation if needed
+            c_text = cached_expl.get("text", "")
+            c_channels = cached_expl.get("cited_channels", [])
+            c_model = cached_expl.get("llm_model", llm_model or "cached-reasoner")
+            c_prompt = cached_expl.get("prompt_version", prompt_version)
+            updated_expl = Explanation(
+                decision_id=decision.decision_id,
+                text=c_text,
+                cited_channels=c_channels,
+                cited_severity=decision.severity,
+                prompt_version=c_prompt,
+                llm_model=c_model,
+                created_at=utc_now(),
+            )
+        else:
+            updated_expl = Explanation(
+                decision_id=decision.decision_id,
+                text=cached_expl.text,
+                cited_channels=cached_expl.cited_channels,
+                cited_severity=decision.severity,
+                prompt_version=cached_expl.prompt_version,
+                llm_model=cached_expl.llm_model,
+                created_at=utc_now(),
+            )
+        cached_meta = state.get("cached_reasoner_meta") or state.get("reasoner_metadata", {})
+        if hasattr(cached_meta, "model_dump"):
+            meta_dict = cached_meta.model_dump()
+        elif isinstance(cached_meta, dict):
+            meta_dict = cached_meta
+        else:
+            meta_dict = {}
+        return {"explanation": updated_expl, "reasoner_metadata": meta_dict}
 
     explanation, meta = generate_explanation_with_metadata(
         decision=decision,
@@ -329,6 +369,8 @@ def run_pipeline(
     run_id: str = "sentinel-run-001",
     audit_db_url: str = DEFAULT_AUDIT_DB,
     llm_model: str | None = None,
+    cached_explanation: Any | None = None,
+    cached_reasoner_meta: Any | None = None,
 ) -> dict[str, Any]:
     """
     Run the full compiled pipeline on a serialised or deserialised TelemetryWindow.
@@ -338,6 +380,8 @@ def run_pipeline(
         run_id: Pipeline execution identifier.
         audit_db_url: Target audit database path.
         llm_model: Reasoner model name.
+        cached_explanation: Optional active anomaly explanation to reuse without re-invoking LLM API.
+        cached_reasoner_meta: Optional active reasoner metadata to reuse.
 
     Returns:
         Pipeline outcome dictionary containing:
@@ -361,6 +405,8 @@ def run_pipeline(
         "prompt_version": DEFAULT_PROMPT_VERSION,
         "retry_count": 0,
         "abstained": False,
+        "cached_explanation": cached_explanation,
+        "cached_reasoner_meta": cached_reasoner_meta,
     }
 
     graph = get_compiled_graph()
