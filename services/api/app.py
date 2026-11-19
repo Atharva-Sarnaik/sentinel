@@ -314,3 +314,25 @@ async def stop_replay() -> dict[str, Any]:
             detail=f"Failed to stop replay session: {e}",
         ) from e
 
+
+class ReplayConfigPayload(BaseModel):
+    pause_on_anomaly: bool | None = Field(default=None, description="Pause playback upon entering an anomalous region")
+    speed_delay_ms: int | None = Field(default=None, ge=0, description="Interval in ms between windows")
+
+
+@app.post("/replay/config", tags=["Historical Replay"])
+async def update_replay_config(payload: ReplayConfigPayload) -> dict[str, Any]:
+    """Update active replay configuration dynamically without resetting session."""
+    try:
+        replay_module = importlib.import_module("services.data_plane.replay")
+        manager = replay_module.replay_manager
+        return await manager.update_config(
+            pause_on_anomaly=payload.pause_on_anomaly,
+            speed_delay_ms=payload.speed_delay_ms,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update replay configuration: {e}",
+        ) from e
+

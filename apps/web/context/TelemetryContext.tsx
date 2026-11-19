@@ -24,6 +24,7 @@ import {
   resumeReplay,
   startReplay,
   stopReplay,
+  updateReplayConfig,
 } from "../lib/api";
 
 export type ApiConnectionState = "connected" | "connecting" | "disconnected" | "error";
@@ -60,12 +61,14 @@ export interface TelemetryContextType {
   selectedSplit: "train" | "test";
   selectedChannel: string;
   replaySpeedMs: number;
+  pauseOnAnomaly: boolean;
   isReplaying: boolean;
   replayError: string | null;
   setSelectedDataset: (ds: "SMAP" | "MSL") => void;
   setSelectedSplit: (split: "train" | "test") => void;
   setSelectedChannel: (ch: string) => void;
   setReplaySpeedMs: (ms: number) => void;
+  togglePauseOnAnomaly: (enabled: boolean) => Promise<void>;
   startHistoricalReplay: (startWindow?: number, pauseOnAnom?: boolean) => Promise<void>;
   pauseHistoricalReplay: () => Promise<void>;
   resumeHistoricalReplay: () => Promise<void>;
@@ -363,6 +366,7 @@ export function TelemetryProvider({ children }: { children: ReactNode }) {
   const [selectedSplit, setSelectedSplit] = useState<"train" | "test">("test");
   const [selectedChannel, setSelectedChannel] = useState<string>("P-1");
   const [replaySpeedMs, setReplaySpeedMs] = useState<number>(500);
+  const [pauseOnAnomaly, setPauseOnAnomaly] = useState<boolean>(true);
   const [replayError, setReplayError] = useState<string | null>(null);
 
   const isReplaying = replayStatus?.status === "running" || replayStatus?.status === "paused";
@@ -465,10 +469,48 @@ export function TelemetryProvider({ children }: { children: ReactNode }) {
     setReplayStatus(null);
   }, []);
 
+  const handleSetReplaySpeedMs = useCallback(
+    async (ms: number) => {
+      setReplaySpeedMs(ms);
+      if (replayStatus?.status === "running" || replayStatus?.status === "paused") {
+        try {
+          const updated = await updateReplayConfig({ speed_delay_ms: ms });
+          setReplayStatus(updated);
+        } catch (err) {
+          console.warn("Failed to update replay speed config:", err);
+        }
+      }
+    },
+    [replayStatus?.status]
+  );
+
+  const togglePauseOnAnomaly = useCallback(
+    async (enabled: boolean) => {
+      setPauseOnAnomaly(enabled);
+      if (replayStatus?.status === "running" || replayStatus?.status === "paused") {
+        try {
+          const updated = await updateReplayConfig({ pause_on_anomaly: enabled });
+          setReplayStatus(updated);
+          if (updated.latest_analysis && updated.latest_window) {
+            const mapped = mapReplayStatusToWindow(updated, simulatedWindow);
+            if (mapped) {
+              setBackendWindow(mapped);
+              setWindowIndex(updated.current_window_index);
+            }
+          }
+        } catch (err) {
+          console.warn("Failed to sync pause_on_anomaly config:", err);
+        }
+      }
+    },
+    [replayStatus?.status, simulatedWindow]
+  );
+
   // Start Historical Replay
   const startHistoricalReplay = useCallback(
-    async (startWindow?: number, pauseOnAnom: boolean = false) => {
+    async (startWindow?: number, pauseOnAnom?: boolean) => {
       try {
+        const effectivePauseOnAnom = pauseOnAnom !== undefined ? pauseOnAnom : pauseOnAnomaly;
         setReplayError(null);
         setBackendWindow(null);
         setLatestBackendResponse(null);
@@ -480,7 +522,7 @@ export function TelemetryProvider({ children }: { children: ReactNode }) {
           stride: 10,
           speed_delay_ms: replaySpeedMs,
           start_window: startWindow,
-          pause_on_anomaly: pauseOnAnom,
+          pause_on_anomaly: effectivePauseOnAnom,
         });
         setReplayStatus(initialStatus);
         setApiStatus("connected");
@@ -498,7 +540,7 @@ export function TelemetryProvider({ children }: { children: ReactNode }) {
         console.error(msg);
       }
     },
-    [selectedDataset, selectedSplit, selectedChannel, replaySpeedMs, simulatedWindow]
+    [selectedDataset, selectedSplit, selectedChannel, replaySpeedMs, pauseOnAnomaly, simulatedWindow]
   );
 
   // Pause Historical Replay
@@ -516,10 +558,17 @@ export function TelemetryProvider({ children }: { children: ReactNode }) {
     try {
       const updated = await resumeReplay();
       setReplayStatus(updated);
+      if (updated.latest_analysis && updated.latest_window) {
+        const mapped = mapReplayStatusToWindow(updated, simulatedWindow);
+        if (mapped) {
+          setBackendWindow(mapped);
+          setWindowIndex(updated.current_window_index);
+        }
+      }
     } catch (err: unknown) {
       console.warn("Failed to resume replay:", err);
     }
-  }, []);
+  }, [simulatedWindow]);
 
   // Stop Historical Replay
   const stopHistoricalReplay = useCallback(async () => {
@@ -707,12 +756,14 @@ export function TelemetryProvider({ children }: { children: ReactNode }) {
         selectedSplit,
         selectedChannel,
         replaySpeedMs,
+        pauseOnAnomaly,
         isReplaying,
         replayError,
         setSelectedDataset: handleSelectDataset,
         setSelectedSplit: handleSelectSplit,
         setSelectedChannel: handleSelectChannel,
-        setReplaySpeedMs,
+        setReplaySpeedMs: handleSetReplaySpeedMs,
+        togglePauseOnAnomaly,
         startHistoricalReplay,
         pauseHistoricalReplay,
         resumeHistoricalReplay,

@@ -191,10 +191,56 @@ def test_api_replay_endpoints():
     resp_resume = client.post("/replay/resume")
     assert resp_resume.status_code == 200
 
-    # 6. Stop replay
+    # 6. Update config dynamically
+    resp_cfg = client.post("/replay/config", json={"pause_on_anomaly": True, "speed_delay_ms": 200})
+    assert resp_cfg.status_code == 200
+    assert resp_cfg.json()["pause_on_anomaly"] is True
+    assert resp_cfg.json()["speed_delay_ms"] == 200
+
+    # 7. Stop replay
     resp_stop = client.post("/replay/stop")
     assert resp_stop.status_code == 200
     assert resp_stop.json()["status"] == "stopped"
+
+
+def test_replay_edge_triggered_anomaly_pause_and_resume():
+    """Verify that auto-pause on anomaly pauses once on entry and resumes through remaining anomalous windows."""
+    async def _run():
+        manager = HistoricalReplayManager()
+        # P-1 anomaly interval starts around window 205. Start replay right at window 204 with pause_on_anomaly=True
+        status = await manager.start(
+            dataset="SMAP",
+            split="test",
+            channel="P-1",
+            window_size=100,
+            stride=10,
+            speed_delay_ms=0,
+            start_window=204,
+            max_windows=210,
+            pause_on_anomaly=True,
+        )
+        assert status["status"] == "running"
+
+        # Give loop a brief moment to run into window 205
+        await asyncio.sleep(0.1)
+
+        # It must pause on window 205 (the anomaly entry)
+        assert manager.status == "paused"
+        assert manager.is_anomalous is True
+        assert manager.current_window_index >= 205
+
+        # Resume the replay
+        resumed = await manager.resume()
+        assert resumed["status"] == "running"
+
+        # Wait for the remainder of windows up to max_windows (210) to finish without re-pausing on every window
+        if manager._task:
+            await manager._task
+
+        assert manager.status == "completed"
+        assert manager.processed_windows >= 5
+
+    asyncio.run(_run())
 
 
 def test_api_replay_invalid_dataset_rejected():

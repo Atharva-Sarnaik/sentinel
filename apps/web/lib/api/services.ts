@@ -11,6 +11,7 @@ import {
   HealthResponse,
   ReplayCatalogDto,
   ReplayStartPayload,
+  ReplayConfigPayload,
   ReplayStatusDto,
   RunDetailsDto,
   RunManifestDto,
@@ -105,6 +106,18 @@ export async function resumeReplay(): Promise<ReplayStatusDto> {
 export async function stopReplay(): Promise<ReplayStatusDto> {
   return apiClient<ReplayStatusDto>("/replay/stop", {
     method: "POST",
+  });
+}
+
+/**
+ * Dynamically update live replay configuration (speed, auto-pause) without resetting session (`POST /replay/config`).
+ */
+export async function updateReplayConfig(
+  payload: ReplayConfigPayload
+): Promise<ReplayStatusDto> {
+  return apiClient<ReplayStatusDto>("/replay/config", {
+    method: "POST",
+    body: JSON.stringify(payload),
   });
 }
 

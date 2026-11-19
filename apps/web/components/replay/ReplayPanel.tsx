@@ -21,6 +21,8 @@ export function ReplayPanel() {
     pauseHistoricalReplay,
     resumeHistoricalReplay,
     stopHistoricalReplay,
+    pauseOnAnomaly,
+    togglePauseOnAnomaly,
     currentWindow,
   } = useTelemetry();
 
@@ -29,8 +31,6 @@ export function ReplayPanel() {
   const activeChannelMeta = availableChannels.find(
     (c) => c.id === selectedChannel
   );
-
-  const [pauseOnAnomaly, setPauseOnAnomaly] = React.useState<boolean>(true);
 
   const firstAnomalyWindow =
     activeChannelMeta && activeChannelMeta.anomaly_intervals.length > 0
@@ -212,7 +212,7 @@ export function ReplayPanel() {
             <input
               type="checkbox"
               checked={pauseOnAnomaly}
-              onChange={(e) => setPauseOnAnomaly(e.target.checked)}
+              onChange={(e) => togglePauseOnAnomaly(e.target.checked)}
               className="rounded text-secondary focus:ring-0 cursor-pointer"
             />
             <span className="font-semibold">Auto-Pause on Anomaly</span>

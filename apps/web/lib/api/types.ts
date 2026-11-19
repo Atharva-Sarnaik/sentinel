@@ -173,6 +173,7 @@ export interface ReplayStatusDto {
   failed_windows: number;
   progress_percent: number;
   is_anomalous: boolean | null;
+  pause_on_anomaly?: boolean;
   latest_window: ReplayWindowSummary | null;
   latest_analysis: AnalyzeResponse | null;
   recent_history: ReplayHistoryItem[];
@@ -189,6 +190,11 @@ export interface ReplayStartPayload {
   max_windows?: number | null;
   start_window?: number;
   pause_on_anomaly?: boolean;
+}
+
+export interface ReplayConfigPayload {
+  pause_on_anomaly?: boolean;
+  speed_delay_ms?: number;
 }
 
 export class ApiClientError extends Error {

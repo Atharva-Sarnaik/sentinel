@@ -164,6 +164,9 @@ class HistoricalReplayManager:
         self.stride: int = 10
         self.speed_delay_ms: int = 500
         self.max_windows: int | None = None
+        self.start_window: int = 0
+        self.pause_on_anomaly: bool = False
+        self._currently_in_anomaly: bool = False
 
         self.current_window_index: int = 0
         self.total_windows: int = 0
@@ -201,6 +204,7 @@ class HistoricalReplayManager:
             "failed_windows": self.failed_windows,
             "progress_percent": round(self.progress_percent, 2),
             "is_anomalous": self.is_anomalous,
+            "pause_on_anomaly": self.pause_on_anomaly,
             "latest_window": self.latest_window,
             "latest_analysis": self.latest_analysis,
             "recent_history": list(self.recent_history),
@@ -282,6 +286,7 @@ class HistoricalReplayManager:
             self.latest_analysis = None
             self.recent_history.clear()
             self.error = None
+            self._currently_in_anomaly = False
 
             self._stop_requested = False
             self._pause_event.set()
@@ -322,6 +327,28 @@ class HistoricalReplayManager:
                 self.status = "running"
                 self._pause_event.set()
                 logger.info(f"Replay resumed at window {self.current_window_index}")
+            return self.get_status()
+
+    async def update_config(
+        self,
+        pause_on_anomaly: bool | None = None,
+        speed_delay_ms: int | None = None,
+    ) -> dict[str, Any]:
+        """Update live configuration dynamically without resetting replay session."""
+        async with self._lock:
+            if pause_on_anomaly is not None:
+                self.pause_on_anomaly = pause_on_anomaly
+                logger.info(f"Replay pause_on_anomaly updated to {pause_on_anomaly}")
+                # If auto-pause is disabled while currently paused, immediately resume
+                if not pause_on_anomaly and self.status == "paused":
+                    self.status = "running"
+                    self._pause_event.set()
+                    logger.info("Auto-pause disabled while paused: unpausing replay immediately")
+
+            if speed_delay_ms is not None:
+                self.speed_delay_ms = max(0, speed_delay_ms)
+                logger.info(f"Replay speed_delay_ms updated to {speed_delay_ms}")
+
             return self.get_status()
 
     async def stop(self) -> dict[str, Any]:
@@ -424,11 +451,19 @@ class HistoricalReplayManager:
                     }
                     self.recent_history.append(history_entry)
 
-                    # Pause playback if configured to halt on anomaly
-                    if getattr(self, "pause_on_anomaly", False) and (is_anom or decision.get("severity", "nominal") != "nominal"):
-                        self.status = "paused"
-                        self._pause_event.clear()
-                        logger.info(f"Replay automatically paused on anomaly at window {self.current_window_index}")
+                    # Edge-triggered auto-pause: pause ONCE upon entering a new anomaly event
+                    is_current_anom = is_anom or decision.get("severity", "nominal") != "nominal"
+                    if is_current_anom:
+                        if not self._currently_in_anomaly:
+                            self._currently_in_anomaly = True
+                            if getattr(self, "pause_on_anomaly", False):
+                                self.status = "paused"
+                                self._pause_event.clear()
+                                logger.info(
+                                    f"Replay automatically paused on anomaly entry at window {self.current_window_index}"
+                                )
+                    else:
+                        self._currently_in_anomaly = False
 
                 except Exception as e:
                     logger.error(f"Error processing replay window {idx}: {e}", exc_info=True)
